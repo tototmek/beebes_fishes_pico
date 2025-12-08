@@ -4,6 +4,7 @@ function player_create()
         jump_dy = -2,
         shoot_dx = -0.4,
         def_x = 24,
+        hit_timeout = 90,
         --kinematics--
         x = -8, y = 0,
         dx = 0, dy = 0,
@@ -11,6 +12,10 @@ function player_create()
         drag = 0.95,
         --collision--
         w_half = 6, h_half = 2,
+        --health
+        hp = 3,
+        hit_ctr = 0,
+        hittable = false,
     }
 end
 
@@ -52,7 +57,15 @@ function player_update()
 
     --pillar collision--
     if pillar_collide(player.x, player.y, player.w_half, player.h_half) then
-        game_over = 1
+        player_get_hit()
+    end
+
+    if player.hittable == false then
+        player.hit_ctr += 1
+        if player.hit_ctr == player.hit_timeout then
+            player.hittable = true
+            player.hit_ctr = 0
+        end
     end
 end
 
@@ -71,8 +84,21 @@ function player_bullets_update()
             sfx(2)
             add(remove_indices, i)
         end
+        if enemy_collide_bullet(bullet.x, bullet.y, 4, 0) then
+            -- TODO: explode here --
+            sfx(5)
+            add(remove_indices, i)
+        end
     end
     for i in all(remove_indices) do
         deli(player_bullets, i)
     end
+end
+
+function player_get_hit()
+    if (player.hittable == false) return
+    sfx(4)
+    player.hittable = false
+    player.hp -= 1
+    if (player.hp < 1) game_over = true
 end

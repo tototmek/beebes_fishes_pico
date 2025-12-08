@@ -14,11 +14,11 @@ function _init()
 
     pillars = {}
     player_bullets = {}
+    enemy_bullets = {}
     enemies = {}
-    -- pillar_spawn(32 + rnd(80), 48 + rnd(16))
+    pillar_spawn(32 + rnd(80), 48 + rnd(16))
     bubblefish_spawn(48)
 end
-
 
 
 function _update60()
@@ -30,14 +30,13 @@ function _update60()
     if in_beat_ctr > beat_time then
         in_beat_ctr = 0
         beat_counter += 1
-        if beat_counter % 30 == 0 then -- every 3 seconds
+        if beat_counter % 23 == 0 then -- every 2.3 seconds
             pillar_spawn(32 + rnd(80), 48 + rnd(16))
-        end
-        for enemy in all(enemies) do
-            if beat_counter % enemy.atk_rate == 0 then
-                enemy.atk_func(enemy)
-                enemy.atk_ctr += 1
-            end
+        elseif beat_counter % 35 == 0 then
+            bubblefish_spawn(16+rnd(88))
+        elseif beat_counter % 200 == 0 then
+            bubblefish_spawn(46+rnd(8))
+            bubblefish_spawn(76+rnd(8))
         end
     end
 
@@ -56,6 +55,7 @@ function _update60()
         deli(enemies, i)
     end
 
+    enemy_bullets_update()
 
 
     --update pillars--    TODO: optimize with a circular buffer
@@ -68,17 +68,19 @@ function _draw()
     for pillar in all(pillars) do
         pillar_draw(pillar)
     end
-    print(#enemies)
     for enemy in all(enemies) do
         enemy.draw_func(enemy)
-        print(enemy.atk_ctr)
     end
     spr(1, player.x-12, player.y-7, 3, 2)
+    for bullet in all(enemy_bullets) do
+        spr(23, bullet.x-4, bullet.y-4)
+    end
     for bullet in all(player_bullets) do
         spr(4, bullet.x-8, bullet.y-4, 2, 1)
     end
     rectfill(0, level_height, 128, 128, 0)
     line(0, level_height, 128, level_height, 11)
+    print("hp: "..player.hp)
 
     --debug--
     -- pset(player.x, player.y, 11)
