@@ -7,13 +7,16 @@ function _init()
     player = player_create()
 
     level_height = 112
-    level_speed = 1/3
-    cycle_counter = 0
-    cycle_time = 600
+    level_speed = 2/3
+    beat_counter = 0
+    beat_time = 6
+    in_beat_ctr = 0
 
     pillars = {}
     player_bullets = {}
-    pillar_spawn(32 + rnd(80), 48 + rnd(16))
+    enemies = {}
+    -- pillar_spawn(32 + rnd(80), 48 + rnd(16))
+    bubblefish_spawn(48)
 end
 
 
@@ -23,13 +26,37 @@ function _update60()
     player_update()
 
     --update level generator--
-    cycle_counter+=1
-    if cycle_counter % 273 == 0 then
-        pillar_spawn(32 + rnd(80), 48 + rnd(16))
+    in_beat_ctr+=1
+    if in_beat_ctr > beat_time then
+        in_beat_ctr = 0
+        beat_counter += 1
+        if beat_counter % 30 == 0 then -- every 3 seconds
+            pillar_spawn(32 + rnd(80), 48 + rnd(16))
+        end
+        for enemy in all(enemies) do
+            if beat_counter % enemy.atk_rate == 0 then
+                enemy.atk_func(enemy)
+                enemy.atk_ctr += 1
+            end
+        end
     end
-    if cycle_counter > cycle_time then
-        cycle_counter = 0
+
+    local idx_to_remove = {}
+    for i, enemy in pairs(enemies) do
+        enemy.update_func(enemy)
+        if enemy.hp < 1 then
+            enemy.dead = true
+            enemy.die_func(enemy)
+        end
+        if enemy.dead then
+            add(idx_to_remove, i)
+        end
     end
+    for i in all(idx_to_remove) do
+        deli(enemies, i)
+    end
+
+
 
     --update pillars--    TODO: optimize with a circular buffer
     pillars_update()
@@ -38,10 +65,15 @@ end
 
 function _draw()
     cls(1)
-    spr(1, player.x-12, player.y-7, 3, 2)
     for pillar in all(pillars) do
         pillar_draw(pillar)
     end
+    print(#enemies)
+    for enemy in all(enemies) do
+        enemy.draw_func(enemy)
+        print(enemy.atk_ctr)
+    end
+    spr(1, player.x-12, player.y-7, 3, 2)
     for bullet in all(player_bullets) do
         spr(4, bullet.x-8, bullet.y-4, 2, 1)
     end
@@ -51,7 +83,6 @@ function _draw()
     --debug--
     -- pset(player.x, player.y, 11)
     -- rect(player.x-player.w_half, player.y-player.h_half, player.x+player.w_half, player.y + player.h_half, 11)
-    print(player)
 
     if game_over then
         print("GAME OVER")

@@ -66,7 +66,7 @@ function player_bullets_update()
         if bullet.x > 136 then
             add(remove_indices, i)
         end
-        if pillar_collide(bullet.x, bullet.y, 0, 0) then
+        if pillar_collide(bullet.x, bullet.y, 4, 0) then
             -- TODO: explode here --
             sfx(2)
             add(remove_indices, i)
