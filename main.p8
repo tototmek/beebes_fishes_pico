@@ -4,6 +4,10 @@ function _init()
     poke(0x5f5c, 0xff) --no button repeat--
     poke(0x5f5d, 0xff) --no button repeat--
 
+    environment = {
+        drag = 0.95,
+    }
+
     player = player_create()
 
     level_height = 112
@@ -71,16 +75,16 @@ function _draw()
     for enemy in all(enemies) do
         enemy.draw_func(enemy)
     end
-    spr(1, player.x-12, player.y-7, 3, 2)
+    spr(1, player.tf.x-12, player.tf.y-7, 3, 2)
     for bullet in all(enemy_bullets) do
-        spr(23, bullet.x-4, bullet.y-4)
+        spr(23, bullet.tf.x-4, bullet.tf.y-4)
     end
     for bullet in all(player_bullets) do
-        spr(4, bullet.x-8, bullet.y-4, 2, 1)
+        spr(4, bullet.tf.x-8, bullet.tf.y-4, 2, 1)
     end
     rectfill(0, level_height, 128, 128, 0)
     line(0, level_height, 128, level_height, 11)
-    print("hp: "..player.hp)
+    print("lives: "..player.hp)
 
     --debug--
     -- pset(player.x, player.y, 11)
