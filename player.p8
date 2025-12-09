@@ -6,26 +6,36 @@ function player_create()
         def_x = 24,
         hit_timeout = 60,
         gravity = 0.07,
-        --kinematics--
-        tf = tf(-8),
-        drag = 0.95,
+        shots = 3,
+        reload_timeout = 40,
         --collision--
         w_half = 6, h_half = 2,
         --health
         hp = 3,
         hit_ctr = 0,
         hittable = false,
+        --shooting
+        shots_left = 3,
+        shoot_ctr = 3,
     }
+    add_tf(player, -8)
+    add_collider(player, 8, 3)
     return player
 end
 
 
 function player_shoot()
-    bullet = {
-        tf = tf(player.tf.x+8, player.tf.y+2, 4, 0.3*player.tf.dy, -0.02, 0),
-    }
+    if (player.shots_left < 1) then
+        sfx(7)
+        return  
+    end
+    player.shoot_ctr = 0
+    player.shots_left -= 1
+    bullet = {}
+    add_tf(bullet, player.x+8, player.y+2, 4, 0.3*player.dy, -0.02)
+    add_collider(bullet, 6, 1)
     add(player_bullets, bullet)
-    player.tf.dx += player.shoot_dx
+    player.dx += player.shoot_dx
     sfx(0)
 end
 
@@ -36,30 +46,19 @@ function player_update()
     end
     if btnp(5) then --jump
         sfx(1)
-        if player.tf.y > 0 then
-            player.tf.dy = player.jump_dy
+        if player.y > 0 then
+            player.dy = player.jump_dy
         end
     end
-    player.tf.ddy = player.gravity
-    tf_spring_to(player.tf, player.def_x, nil, 0.003)
-    -- player.dx += player.ddx
-    -- player.x += player.dx
-    -- player.dy += player.ddy
-    if player.tf.y > level_height then --bounce from level bottom
-        tf_spring_to(player.tf, nil, level_height, 0.02)
-    end
-    tf_update(player.tf)
-    -- player.y += player.dy
-    -- player.dx *= player.drag
-    -- player.dy *= player.drag
+    player.ddy = player.gravity
+    tf_spring_to(player, player.def_x, nil, 0.003)
 
-    --update player bullets--
+    if player.y > level_height then --bounce from level bottom
+        tf_spring_to(player, nil, level_height, 0.02)
+    end
+    tf_update(player)
+
     player_bullets_update()
-
-    --pillar collision--
-    if pillar_collide(player.tf.x, player.tf.y, player.w_half, player.h_half) then
-        player_get_hit()
-    end
 
     if player.hittable == false then
         player.hit_ctr += 1
@@ -68,25 +67,36 @@ function player_update()
             player.hit_ctr = 0
         end
     end
+    if player.shoot_ctr > player.reload_timeout then
+        if (player.shots_left < player.shots) then
+            player.shots_left = player.shots
+        end
+    else 
+        player.shoot_ctr += 1
+    end
 end
 
 function player_bullets_update()
     local remove_indices = {}
     for i, bullet in pairs(player_bullets) do
-        bullet.tf.ddx += 0.003
-        tf_update(bullet.tf)
-        if bullet.tf.x > 136 then
+        bullet.ddx += 0.003
+        tf_update(bullet)
+        if bullet.x > 136 then
             add(remove_indices, i)
         end
-        if pillar_collide(bullet.tf.x, bullet.tf.y, 4, 0) then
+        for pillar in all(pillars) do
+            if check_collision(pillar, bullet) then
             -- TODO: explode here --
-            sfx(2)
-            add(remove_indices, i)
+                sfx(2)
+                add(remove_indices, i)
+            end
         end
-        if enemy_collide_bullet(bullet.tf.x, bullet.tf.y, 4, 2) then
-            -- TODO: explode here --
-            sfx(5)
-            add(remove_indices, i)
+        for enemy in all(enemies) do
+            if check_collision(enemy, bullet, 2) then 
+                enemy.hp -= 1
+                sfx(5)
+                add(remove_indices, i)
+            end
         end
     end
     for i in all(remove_indices) do

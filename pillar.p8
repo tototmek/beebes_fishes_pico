@@ -1,47 +1,33 @@
 
-function pillar_spawn(gap_y, gap_size)
-    local lo_y = gap_y + 0.5 * gap_size
-    local hi_y = gap_y - 0.5 * gap_size
-
-    local pillar = {
-        --placement--
-        high_y = hi_y, low_y = lo_y,
-        x = 132,
-    }
+function pillar_spawn(gap_y, gap_width)
+    pillar = {}
+    add_tf(pillar, 132, gap_y - gap_width - 64)
+    add_collider(pillar, 4, 64)
+    add(pillars, pillar)
+    pillar = {}
+    add_tf(pillar, 132, gap_y + gap_width + 64)
+    add_collider(pillar, 4, 64)
     add(pillars, pillar)
 end
 
 function pillar_draw(pillar)
-    spr(32, pillar.x-4, pillar.low_y)
-    for i=1,(level_height-pillar.low_y)/8 do
-        spr(48, pillar.x-4, pillar.low_y+i*8)
+    spr(32, pillar.x-4, pillar.y-64)
+    for i=1,14 do
+        spr(48, pillar.x-4, pillar.y-64+i*8)
     end
-    spr(32, pillar.x-4, pillar.high_y - 8, 1, 1, false, true)
-    for i=1,pillar.high_y/8 do
-        spr(48, pillar.x-4, pillar.high_y - (i+1)*8)
-    end
-end
-
-function pillar_collide(x, y, w_half, h_half)
-    for pillar in all(pillars) do
-        if x > pillar.x - 8 - w_half and x < pillar.x + 8 + w_half then
-            if y > pillar.low_y - h_half or y < pillar.high_y + h_half then
-                return true
-            end
-        end
-    end
-    return false
+    spr(32, pillar.x-4, pillar.y+56, 1, 1, false, true)
 end
 
 function pillars_update() 
-    local remove_indices = {}
-    for i, pillar in pairs(pillars) do
-        pillar.x -= level_speed
+    local i = #pillars
+    for i=#pillars, 1, -1 do
+        local pillar = pillars[i]
+        pillar.dx = -level_speed
+        tf_update(pillar)
         if pillar.x < -4 then
-            add(remove_indices, i)
+            deli(pillars, i)
+        elseif check_collision(player, pillar) then
+            player_get_hit()
         end
-    end
-    for i in all(remove_indices) do
-        deli(pillars, i)
     end
 end
