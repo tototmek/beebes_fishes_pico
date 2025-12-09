@@ -3,28 +3,8 @@
 function _init()
     poke(0x5f5c, 0xff) --no button repeat--
     poke(0x5f5d, 0xff) --no button repeat--
-    pal(4, 129, 1)
+    pal(4, 129, 1) -- add blues to pallette
     pal(5, 140, 1)
-
-    --generate ditter pattern--
-    pat = {}
-    local p=0
-    for i=0,1 do
-    for j=0,7 do
-    n=0 b=0
-    for k=3,0,-1 do
-    for l=3,0,-1 do
-    if sget(j*4+l,32+i*4+k)>=7 then
-    n+=shl(1,b)
-    end
-    b+=1
-    end
-    end
-    pat[p]=n
-    p+=1
-    end
-    end
-
 
     environment = {
         drag = 0.95,
@@ -107,15 +87,10 @@ end
 
 function _draw()
     cls(4)
-    local p = -1
-    color(1)
-    for j=0,56,4 do
-        fillp(pat[p])
-        poke(0x5f33, 0x01) --pattern fill transparent
-        rectfill(0,j,127,j+3)
-        p=min(p+1,15)
+    rectfill(0, 0, 127, 16, 1)
+    for i=0,127,8 do
+        spr(80, i, 16, 1, 3)
     end
-    fillp()
 
     -- draw particles --
     for particle in all(particles) do
@@ -128,15 +103,18 @@ function _draw()
     for enemy in all(enemies) do
         enemy.draw_func(enemy)
     end
+    for bullet in all(player_bullets) do
+        local len = 12*(4 - bullet.dx)
+        line(bullet.x, bullet.y, bullet.x-len*bullet.dx, bullet.y-len*bullet.dy, 7)
+        circfill(bullet.x-10, bullet.y, bullet.dx)
+        spr(4, bullet.x-8, bullet.y-4, 2, 1)
+    end
     spr(1, player.x-12, player.y-7, 3, 2)
     for bullet in all(enemy_bullets) do
         spr(23, bullet.x-4, bullet.y-4)
     end
-    for bullet in all(player_bullets) do
-        spr(4, bullet.x-8, bullet.y-4, 2, 1)
-    end
     rectfill(0, level_height, 127, 127, 1)
-    line(0, level_height, 128, level_height, 13)
+    line(0, level_height, 128, level_height, 7)
     local lives = ""
     for i=1,player.hp do
         lives = lives.."♥"

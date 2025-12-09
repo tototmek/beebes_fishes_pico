@@ -81,7 +81,7 @@ function player_bullets_update()
     for i, bullet in pairs(player_bullets) do
         bullet.ddx += 0.003
         tf_update(bullet)
-        if bullet.x > 136 then
+        if bullet.x > 180 then
             add(remove_indices, i)
         end
         for pillar in all(pillars) do

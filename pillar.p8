@@ -1,10 +1,10 @@
 
 function pillar_spawn(gap_y, gap_width)
-    pillar = {}
+    local pillar = {collision = true,}
     add_tf(pillar, 132, gap_y - gap_width - 64)
     add_collider(pillar, 4, 64)
     add(pillars, pillar)
-    pillar = {}
+    pillar = {collision = true,}
     add_tf(pillar, 132, gap_y + gap_width + 64)
     add_collider(pillar, 4, 64)
     add(pillars, pillar)
@@ -24,9 +24,12 @@ function pillars_update()
         local pillar = pillars[i]
         pillar.dx = -level_speed
         tf_update(pillar)
+        if pillar.x < player.x - 4 then
+            pillar.collision = false --prevents hitting a pillar from the back
+        end
         if pillar.x < -4 then
             deli(pillars, i)
-        elseif check_collision(player, pillar) then
+        elseif pillar.collision and check_collision(player, pillar) then
             player_get_hit()
         end
     end

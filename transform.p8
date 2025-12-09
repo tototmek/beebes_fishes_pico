@@ -27,6 +27,11 @@ function add_collider(tab, x_half_size, y_half_size)
     tab.y_half_size = y_half_size or 0
 end
 
+function tf_is_outside_screen(tf, margin)
+    local margin = margin or 24
+    return tf.x < -margin or tf.x > 128+margin or tf.y < -margin or tf.y > 128+margin
+end
+
 
 function check_collision(a, b, range)
     local r = range or 0
