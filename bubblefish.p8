@@ -54,6 +54,11 @@ function enemy_shoot(x, y, dx, dy)
 end
 
 function enemy_update(enemy)
+    if enemy.hp < 1 then
+        enemy.dead = true
+        score += 1
+        enemy.die_func(enemy)
+    end
     enemy.beat_ctr += 1
     if enemy.beat_ctr % enemy.atk_rate == 0 then
         enemy.atk_ctr += 1
@@ -62,16 +67,15 @@ function enemy_update(enemy)
 end
 
 function enemy_bullets_update()
-    local remove_indices = {}
     for i = #enemy_bullets, 1, -1 do
         local bullet = enemy_bullets[i]
         tf_update(bullet)
         if bullet.x < -4 then -- went outside the screen
             deli(enemy_bullets, i)
-            add(remove_indices, i)
         elseif check_collision(bullet, player) then
             player_get_hit()
-            add(remove_indices, i)
+            deli(enemy_bullets, i)
+            explode_big(bullet.x, bullet.y)
         end
     end
 end

@@ -8,8 +8,6 @@ function player_create()
         gravity = 0.07,
         shots = 3,
         reload_timeout = 40,
-        --collision--
-        w_half = 6, h_half = 2,
         --health
         hp = 3,
         hit_ctr = 0,
@@ -18,7 +16,7 @@ function player_create()
         shots_left = 3,
         shoot_ctr = 3,
     }
-    add_tf(player, -8)
+    add_tf(player, -12, 36)
     add_collider(player, 8, 3)
     return player
 end
@@ -37,6 +35,7 @@ function player_shoot()
     add(player_bullets, bullet)
     player.dx += player.shoot_dx
     sfx(0)
+    particle_spawn_explosion(bullet.x, bullet.y, 6)
 end
 
 function player_update()
@@ -50,11 +49,14 @@ function player_update()
             player.dy = player.jump_dy
         end
     end
+    if in_beat_ctr == 0 and beat_counter % 3 == 0 then
+        particle_spawn_foam(player.x-12, player.y, -0.5)
+    end
     player.ddy = player.gravity
     tf_spring_to(player, player.def_x, nil, 0.003)
 
     if player.y > level_height then --bounce from level bottom
-        tf_spring_to(player, nil, level_height, 0.02)
+        tf_spring_to(player, nil, level_height, 0.01)
     end
     tf_update(player)
 
@@ -77,30 +79,27 @@ function player_update()
 end
 
 function player_bullets_update()
-    local remove_indices = {}
-    for i, bullet in pairs(player_bullets) do
+    for i, bullet in ipairs(player_bullets) do
+        particle_spawn_foam(bullet.x, bullet.y, 0.5, 0.125-rnd(0.25))
         bullet.ddx += 0.003
         tf_update(bullet)
-        if bullet.x > 180 then
-            add(remove_indices, i)
+        if bullet.x > 136 then
+            deli(player_bullets, i)
         end
         for pillar in all(pillars) do
             if check_collision(pillar, bullet) then
-            -- TODO: explode here --
-                sfx(2)
-                add(remove_indices, i)
+                explode_small(bullet.x+6, bullet.y)
+                deli(player_bullets, i)
             end
         end
         for enemy in all(enemies) do
             if check_collision(enemy, bullet, 2) then 
+                explode_big((bullet.x+6+enemy.x)/2, (bullet.y+enemy.y)/2)
                 enemy.hp -= 1
                 sfx(5)
-                add(remove_indices, i)
+                deli(player_bullets, i)
             end
         end
-    end
-    for i in all(remove_indices) do
-        deli(player_bullets, i)
     end
 end
 
@@ -109,5 +108,8 @@ function player_get_hit()
     sfx(4)
     player.hittable = false
     player.hp -= 1
-    if (player.hp < 1) game_over = true
+    if (player.hp < 1) then
+        game_over = true
+        playing = false
+    end
 end
