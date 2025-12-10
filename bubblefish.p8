@@ -77,5 +77,12 @@ function enemy_bullets_update()
             deli(enemy_bullets, i)
             explode_big(bullet.x, bullet.y)
         end
+        for pb in all(player_bullets) do
+            if check_collision(bullet, pb, 3) then
+                particle_spawn_explosion(bullet.x, bullet.y, 13, 0, 8)
+                deli(enemy_bullets, i)
+                sfx(5)
+            end
+        end
     end
 end

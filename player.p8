@@ -109,6 +109,14 @@ function player_get_hit()
     player.hittable = false
     player.hp -= 1
     if (player.hp < 1) then
+        for i, bullet in ipairs(player_bullets) do
+            explode_small(bullet.x+6, bullet.y)
+            deli(player_bullets, i)
+        end
+        for i, bullet in ipairs(enemy_bullets) do
+            explode_big(bullet.x+6, bullet.y)
+            deli(enemy_bullets, i)
+        end
         game_over = true
         playing = false
     end
