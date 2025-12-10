@@ -117,6 +117,7 @@ function player_get_hit()
             explode_big(bullet.x+6, bullet.y)
             deli(enemy_bullets, i)
         end
+        music(1)
         game_over = true
         playing = false
     end

@@ -3,14 +3,12 @@ function bubblefish_spawn(y)
         hp = 1, dead = false,
         target_x = 104, target_y = y,
         draw_x = 136,
-        atk_func = bubblefish_atk,
+        atk_func = cocreate(bubblefish_atk),
         die_func = bubblefish_die,
         update_func = bubblefish_update,
         draw_func = bubblefish_draw,
         atk_rate = 90,
-        atk_ctr = 0,
         beat_ctr = 0,
-        x_size = 1, y_size = 1,
     }
     add_tf(enemy, 136)
     add_collider(enemy, 4, 4)
@@ -18,9 +16,14 @@ function bubblefish_spawn(y)
 end
 
 function bubblefish_atk(bf)
-    if (bf.atk_ctr < 5) bubblefish_shoot(bf)
-    if (bf.atk_ctr == 5) bf.target_x = 148
-    if (bf.atk_ctr > 5) bf.dead = true 
+    for i=1,5 do
+        bubblefish_shoot(bf)
+        yield()
+    end
+    bf.target_x = 148
+    yield()
+    bf.dead = true 
+    yield()
 end
 
 function bubblefish_die(bf)
@@ -28,14 +31,14 @@ end
 
 function bubblefish_update(bf)
     enemy_update(bf)
-    bf.ddx = 0.001 * (bf.target_x - bf.x)
+    tf_spring_to(bf, bf.target_x, nil, 0.001)
     tf_update(bf)
     bf.y = bf.target_y + sin(time()/8) * 8
     bf.draw_x = bf.x + cos(2137+time()/9) * 6
 end
 
 function bubblefish_draw(bf)  
-    spr(7+time()*2%2 , flr(bf.draw_x-4), flr(bf.y-4), bf.x_size, bf.y_size)
+    spr(7+time()*2%2 , flr(bf.draw_x-4), flr(bf.y-4), 1, 1)
 end
 
 function bubblefish_shoot(bf)
@@ -61,8 +64,9 @@ function enemy_update(enemy)
     end
     enemy.beat_ctr += 1
     if enemy.beat_ctr % enemy.atk_rate == 0 then
-        enemy.atk_ctr += 1
-        enemy.atk_func(enemy)
+        if costatus(enemy.atk_func) then
+            coresume(enemy.atk_func, enemy)
+        end
     end
 end
 

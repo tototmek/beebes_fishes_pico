@@ -5,6 +5,7 @@ function _init()
     poke(0x5f5d, 0xff) --no button repeat--
     pal(4, 129, 1) -- add blues to pallette
     pal(5, 140, 1)
+    music(1)
 
     environment = {
         drag = 0.95,
@@ -33,6 +34,7 @@ function _init()
 end
 
 function init_gameplay()
+    music(0)
     dead_ctr = 0
     score = 0
     playing = true
@@ -48,6 +50,7 @@ function init_gameplay()
     player = player_create()
     pillar_spawn(31+rnd(30), 24)
     press_x_text.target_y = 132
+    constellationfish_spawn(63)
 end
 
 
@@ -64,8 +67,10 @@ function _update60()
         if beat_counter % 23 == 0 then -- every 2.3 seconds
             -- pillar_spawn(32 + rnd(80), 24 + rnd(16))
             pillar_spawn(32+rnd(64), 24)
-        elseif beat_counter % 35 == 0 then
+        elseif beat_counter % 62 == 0 then
             bubblefish_spawn(16+rnd(88))
+        elseif beat_counter % 83 == 0 then
+            constellationfish_spawn(16+rnd(88))
         elseif beat_counter % 200 == 0 then
             bubblefish_spawn(46+rnd(8))
             bubblefish_spawn(76+rnd(8))

@@ -17,9 +17,9 @@ function tf_update(tf)
     tf.dy *= tf.drag
 end
 
-function tf_spring_to(tf, x, y, springiness)
+function tf_spring_to(tf, x, y, springiness, springiness_y)
     if (x) tf.ddx = springiness * (x - tf.x) 
-    if (y) tf.ddy = springiness * (y - tf.y) 
+    if (y) tf.ddy = (springiness_y or springiness) * (y - tf.y) 
 end
 
 function add_collider(tab, x_half_size, y_half_size)
