@@ -11,7 +11,7 @@ function player_create()
         --health
         hp = 3,
         hit_ctr = 0,
-        hittable = false,
+        hittable = true,
         --shooting
         shots_left = 3,
         shoot_ctr = 3,
@@ -88,16 +88,18 @@ function player_bullets_update()
         end
         for pillar in all(pillars) do
             if check_collision(pillar, bullet) then
-                explode_small(bullet.x+6, bullet.y)
+                explode_small(bullet.x-4, bullet.y)
                 deli(player_bullets, i)
             end
         end
-        for enemy in all(enemies) do
-            if check_collision(enemy, bullet, 2) then 
-                explode_big((bullet.x+6+enemy.x)/2, (bullet.y+enemy.y)/2)
-                enemy.hp -= 1
-                sfx(5)
-                deli(player_bullets, i)
+        if bullet.x < 116 do
+            for enemy in all(enemies) do
+                if check_collision(enemy, bullet, 2) then 
+                    explode_big((bullet.x+6+enemy.x)/2, (bullet.y+enemy.y)/2)
+                    enemy.hp -= 1
+                    sfx(5)
+                    deli(player_bullets, i)
+                end
             end
         end
     end
@@ -108,14 +110,15 @@ function player_get_hit()
     sfx(4)
     player.hittable = false
     player.hp -= 1
+    cam_shake = 10
+    -- if (player.hp == 1) then  -- make it intense
+    --     music(5)
+    --     sfx(8)
+    -- end
     if (player.hp < 1) then
         for i, bullet in ipairs(player_bullets) do
             explode_small(bullet.x+6, bullet.y)
             deli(player_bullets, i)
-        end
-        for i, bullet in ipairs(enemy_bullets) do
-            explode_big(bullet.x+6, bullet.y)
-            deli(enemy_bullets, i)
         end
         music(1)
         game_over = true

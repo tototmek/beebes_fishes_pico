@@ -4,11 +4,12 @@ function bubblefish_spawn(y)
         target_x = 104, target_y = y,
         draw_x = 136,
         atk_func = cocreate(bubblefish_atk),
-        die_func = bubblefish_die,
+        die_func = function()end,
         update_func = bubblefish_update,
         draw_func = bubblefish_draw,
         atk_rate = 90,
         beat_ctr = 0,
+        seed = time(),
     }
     add_tf(enemy, 136)
     add_collider(enemy, 4, 4)
@@ -16,7 +17,7 @@ function bubblefish_spawn(y)
 end
 
 function bubblefish_atk(bf)
-    for i=1,5 do
+    for i=1,8 do
         bubblefish_shoot(bf)
         yield()
     end
@@ -26,15 +27,13 @@ function bubblefish_atk(bf)
     yield()
 end
 
-function bubblefish_die(bf)
-end
 
 function bubblefish_update(bf)
     enemy_update(bf)
     tf_spring_to(bf, bf.target_x, nil, 0.001)
     tf_update(bf)
-    bf.y = bf.target_y + sin(time()/8) * 8
-    bf.draw_x = bf.x + cos(2137+time()/9) * 6
+    bf.y = bf.target_y + sin(bf.seed+time()/8) * 8
+    bf.draw_x = bf.x + cos(bf.seed+2137+time()/9) * 6
 end
 
 function bubblefish_draw(bf)  
@@ -71,10 +70,9 @@ function enemy_update(enemy)
 end
 
 function enemy_bullets_update()
-    for i = #enemy_bullets, 1, -1 do
-        local bullet = enemy_bullets[i]
+    for i, bullet in ipairs(enemy_bullets) do
         tf_update(bullet)
-        if bullet.x < -4 then -- went outside the screen
+        if bullet.x < -4 or bullet.y < -4 or bullet.y > 131 then -- went outside the screen
             deli(enemy_bullets, i)
         elseif check_collision(bullet, player) then
             player_get_hit()
@@ -87,6 +85,12 @@ function enemy_bullets_update()
                 deli(enemy_bullets, i)
                 sfx(5)
             end
+        end
+    end
+    if game_over then
+        for i, bullet in ipairs(enemy_bullets) do
+            explode_big(bullet.x+6, bullet.y)
+            deli(enemy_bullets, i)
         end
     end
 end

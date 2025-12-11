@@ -6,8 +6,9 @@ function constellationfish_spawn(y)
         die_func = constellationfish_die,
         update_func = constellationfish_update,
         draw_func = constellationfish_draw,
-        atk_rate = 2,
+        atk_rate = 60,
         beat_ctr = 0,
+        seed = time(),
     }
     add_tf(enemy, 136, y)
     add_collider(enemy, 4, 4)
@@ -15,34 +16,27 @@ function constellationfish_spawn(y)
 end
 
 function constellationfish_atk(bf)
-    for i=1,5 do
-        for i=1,40 do
-            yield()
-        end
-        enemy_shoot(bf.x, bf.y, -1.0, -0.5)
-        yield()
-        enemy_shoot(bf.x, bf.y, -1.2, 0)
-        yield()
-        enemy_shoot(bf.x, bf.y, -1.0, 0.5)
-        bf.dx+=0.6
-        for i=1,20 do
-            yield()
-        end
-    end
-    bf.target_x = 148
-    for i=1,90 do
+    for i=1,8 do
         yield()
     end
+    bf.target_x = 136
+    yield()
     bf.dead = true
     yield()
 end
 
 function constellationfish_die(bf)
+    local shoot_x, shoot_y = bf.x, bf.y
+    enemy_shoot(shoot_x, shoot_y, -0.5, -0.75)
+    enemy_shoot(shoot_x, shoot_y, -0.8, -0.5)
+    enemy_shoot(shoot_x, shoot_y, -1.0)
+    enemy_shoot(shoot_x, shoot_y, -0.8, 0.5)
+    enemy_shoot(shoot_x, shoot_y, -0.5, 0.75)
 end
 
 function constellationfish_update(bf)
     enemy_update(bf)
-    tf_spring_to(bf, bf.target_x + cos(2137+time()/19)*16, player.y + sin(time()/18)*16, 0.001, 0.0005)
+    tf_spring_to(bf, bf.target_x + cos(bf.seed+2137+time()/19)*16, player.y + sin(bf.seed+time()/18)*16, 0.001, 0.0006)
     tf_update(bf)
 end
 

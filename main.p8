@@ -3,8 +3,6 @@
 function _init()
     poke(0x5f5c, 0xff) --no button repeat--
     poke(0x5f5d, 0xff) --no button repeat--
-    pal(4, 129, 1) -- add blues to pallette
-    pal(5, 140, 1)
     music(1)
 
     environment = {
@@ -19,9 +17,10 @@ function _init()
     level_speed = 2/3
     dead_ctr = 2137
     score = 0
+    cam_shake = 0
     
     background_x = rnd(128)
-    background_range_x = rnd(13)
+    background_range_x = rnd(11)
     background_len = 3 + rnd(3)
 
     press_x_text = {target_y = 92}
@@ -35,6 +34,7 @@ end
 
 function init_gameplay()
     music(0)
+    game_over = false
     dead_ctr = 0
     score = 0
     playing = true
@@ -50,7 +50,7 @@ function init_gameplay()
     player = player_create()
     pillar_spawn(31+rnd(30), 24)
     press_x_text.target_y = 132
-    constellationfish_spawn(63)
+    nautilus_spawn(63)
 end
 
 
@@ -69,11 +69,10 @@ function _update60()
             pillar_spawn(32+rnd(64), 24)
         elseif beat_counter % 62 == 0 then
             bubblefish_spawn(16+rnd(88))
-        elseif beat_counter % 83 == 0 then
+        elseif beat_counter % 133 == 0 then
             constellationfish_spawn(16+rnd(88))
-        elseif beat_counter % 200 == 0 then
-            bubblefish_spawn(46+rnd(8))
-            bubblefish_spawn(76+rnd(8))
+        elseif beat_counter % 216 == 0 then
+            nautilus_spawn(16+rnd(88))
         end
     end
 
@@ -115,9 +114,15 @@ function _update60()
         background_range_x = rnd(11)
         background_len = min(3 + rnd(3), 13-background_range_x)
     end
+    if cam_shake > 0 then
+        cam_shake -= 1
+    end
+    camera(rnd(cam_shake), rnd(cam_shake))
 end
 
 function _draw()
+    pal(4, 129, 1) -- add blues to pallette
+    pal(5, 140, 1)
     cls(4)
     rectfill(0, 0, 127, 16, 1)
     for i=0,127,8 do
@@ -142,10 +147,26 @@ function _draw()
         enemy.draw_func(enemy)
     end
 
-    spr(1, flr(player.x-12), flr(player.y-7), 3, 2)
+    local blink_player = player.hit_ctr%12 < 6 and player.hit_ctr > 0
+    if blink_player then
+        pal(12, 7, 0)
+        pal(5, 7, 0)
+    end
+    local player_flr_x, player_flr_y = flr(player.x), flr(player.y)
+    spr(1, player_flr_x-12, player_flr_y-7, 3, 2)
+    if blink_player then
+        pal(12, 12, 0)
+        pal(5, 5, 0)
+    end
     particles_draw()
-    local sine_prop = 2*sin(time())
-    line(player.x-13, flr(player.y+1-sine_prop), player.x-13, flr(player.y+2+sine_prop), 6)  --propeller
+
+    local sine_prop = flr(2*sin(time()))
+    line(player_flr_x-13, player_flr_y+1-sine_prop, player_flr_x-13, player_flr_y+2+sine_prop, 6)  --propeller
+    for i=1,player.shots_left do
+        -- torpedo bays
+        rectfill(player_flr_x-9+i*5, player_flr_y+2, player_flr_x-8+i*5, player_flr_y+3, 12)
+    end
+
     for bullet in all(player_bullets) do
         -- circfill(bullet.x-10, bullet.y, bullet.dx, 6)
         spr(4, bullet.x-8, bullet.y-4, 2, 1)
@@ -165,6 +186,7 @@ function _draw()
         print(lives.."  ", 1, 2, 7)
         score_str_length = print(score,0,-100)
         print(score, 127-score_str_length, 2)
+        print(player.hit_ctr)
 
     -- print("particles "..#foam_particles, 63, level_height+3)
     else -- draw main menu
