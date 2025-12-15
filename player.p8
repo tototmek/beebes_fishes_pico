@@ -71,7 +71,8 @@ function player_update()
     end
     if player.shoot_ctr > player.reload_timeout then
         if (player.shots_left < player.shots) then
-            player.shots_left = player.shots
+            player.shots_left += 1
+            player.shoot_ctr -= 8
         end
     else 
         player.shoot_ctr += 1
@@ -116,10 +117,10 @@ function player_get_hit()
     --     sfx(8)
     -- end
     if (player.hp < 1) then
-        for i, bullet in ipairs(player_bullets) do
+        for bullet in all(player_bullets) do
             explode_small(bullet.x+6, bullet.y)
-            deli(player_bullets, i)
         end
+        player_bullets = {}
         music(1)
         game_over = true
         playing = false

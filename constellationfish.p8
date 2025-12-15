@@ -21,8 +21,9 @@ function constellationfish_atk(bf)
     end
     bf.target_x = 136
     yield()
-    bf.dead = true
     yield()
+    yield()
+    bf.dead = true
 end
 
 function constellationfish_die(bf)
@@ -35,9 +36,7 @@ function constellationfish_die(bf)
 end
 
 function constellationfish_update(bf)
-    enemy_update(bf)
-    tf_spring_to(bf, bf.target_x + cos(bf.seed+2137+time()/19)*16, player.y + sin(bf.seed+time()/18)*16, 0.001, 0.0006)
-    tf_update(bf)
+    tf_spring_to(bf, bf.target_x + cos(bf.seed+time()/9)*6, player.y, 0.001, 0.0006)
 end
 
 function constellationfish_draw(bf) 

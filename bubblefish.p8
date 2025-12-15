@@ -24,14 +24,11 @@ function bubblefish_atk(bf)
     bf.target_x = 148
     yield()
     bf.dead = true 
-    yield()
 end
 
 
 function bubblefish_update(bf)
-    enemy_update(bf)
     tf_spring_to(bf, bf.target_x, nil, 0.001)
-    tf_update(bf)
     bf.y = bf.target_y + sin(bf.seed+time()/8) * 8
     bf.draw_x = bf.x + cos(bf.seed+2137+time()/9) * 6
 end
@@ -56,6 +53,8 @@ function enemy_shoot(x, y, dx, dy)
 end
 
 function enemy_update(enemy)
+    tf_update(enemy)
+    enemy.update_func(enemy)
     if enemy.hp < 1 then
         enemy.dead = true
         score += 1
@@ -63,7 +62,7 @@ function enemy_update(enemy)
     end
     enemy.beat_ctr += 1
     if enemy.beat_ctr % enemy.atk_rate == 0 then
-        if costatus(enemy.atk_func) then
+        if game_over == false and costatus(enemy.atk_func) then
             coresume(enemy.atk_func, enemy)
         end
     end

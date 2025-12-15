@@ -18,7 +18,7 @@ end
 function nautilus_atk(bf)
     for i=1,10 do
         yield()
-        local shoot_x, shoot_y = bf.x-8, bf.y+4
+        local shoot_x, shoot_y = bf.x-4, bf.y+4
         enemy_shoot(shoot_x, shoot_y, -1.0, -0.5)
         enemy_shoot(shoot_x, shoot_y, -1.2, 0)
         enemy_shoot(shoot_x, shoot_y, -1.0, 0.5)
@@ -28,8 +28,9 @@ function nautilus_atk(bf)
     bf.target_x = 148
     yield()
     yield()
-    bf.dead = true
     yield()
+    yield()
+    bf.dead = true
 end
 
 function nautilus_die(bf)
@@ -37,9 +38,7 @@ function nautilus_die(bf)
 end
 
 function nautilus_update(bf)
-    enemy_update(bf)
-    tf_spring_to(bf, bf.target_x + cos(bf.seed+2137+time()/19)*8, bf.target_y + sin(bf.seed+time()/21)*16, 0.0006)
-    tf_update(bf)
+    tf_spring_to(bf, bf.target_x + cos(bf.seed+2137+time()/8)*8, bf.target_y + sin(bf.seed+time()/9)*6, 0.0006)
 end
 
 function nautilus_draw(bf) 
@@ -54,7 +53,7 @@ function naked_nautilus_spawn(x, y)
         target_x = x, target_y = y,
         atk_func = cocreate(naked_nautilus_atk),
         die_func = function()end,
-        update_func = naked_nautilus_update,
+        update_func = function()end,
         draw_func = naked_nautilus_draw,
         atk_rate = 20,
         beat_ctr = 0,
@@ -87,12 +86,6 @@ function naked_nautilus_atk(bf)
     explode_small(bf.x, bf.y)
     sfx(2)
     bf.dead = true
-    yield()
-end
-
-function naked_nautilus_update(bf)
-    enemy_update(bf)
-    tf_update(bf)
 end
 
 function naked_nautilus_draw(bf) 

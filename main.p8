@@ -1,10 +1,8 @@
-
-
 function _init()
     poke(0x5f5c, 0xff) --no button repeat--
     poke(0x5f5d, 0xff) --no button repeat--
     music(1)
-
+    
     environment = {
         drag = 0.95,
     }
@@ -13,44 +11,29 @@ function _init()
     playing = false
 
 
-    level_height = 112
-    level_speed = 2/3
+    level_height, level_speed = 112, 2/3
     dead_ctr = 2137
-    score = 0
     cam_shake = 0
-    
-    background_x = rnd(128)
-    background_range_x = rnd(11)
-    background_len = 3 + rnd(3)
 
     press_x_text = {target_y = 92}
-    add_tf(press_x_text, 33, 132)
+    add_tf(press_x_text, 33, 128)
 
     back_particles = {}
     for i=1,20 do
         back_particles[i] = {rnd(127), rnd(127)}
     end
+
+    bkgr_init()
 end
 
 function init_gameplay()
-    music(0)
-    game_over = false
-    dead_ctr = 0
+    music(6)
     score = 0
-    playing = true
-    beat_counter = 0
-    beat_time = 6
-    in_beat_ctr = 0
-    pillars = {}
-    player_bullets = {}
-    enemy_bullets = {}
-    enemies = {}
-    foam_particles = {}
-    explosion_particles = {}
+    playing, game_over = true, false
+    dead_ctr, beat_counter, in_beat_ctr, beat_time = 0, 0, 0, 6
+    pillars, player_bullets, enemy_bullets, enemies, foam_particles, explosion_particles = {}, {}, {}, {}, {}, {}
     player = player_create()
-    pillar_spawn(31+rnd(30), 24)
-    press_x_text.target_y = 132
-    nautilus_spawn(63)
+    press_x_text.target_y = 160
 end
 
 
@@ -76,16 +59,6 @@ function _update60()
         end
     end
 
-    for i, enemy in ipairs(enemies) do
-        enemy.update_func(enemy)
-        if enemy.dead then
-            deli(enemies, i)
-        end
-    end
-
-    enemy_bullets_update()
-
-    pillars_update()
 
     else -- end of main game loop, menu code below
     dead_ctr += 1
@@ -103,21 +76,22 @@ function _update60()
             explode_small(player.x - 16 + rnd(32), player.y - 8 + rnd(16))
         end
     end
-
     end --below runs in both game loop and main menu
+    for i, enemy in ipairs(enemies) do -- update enemies and destroy if needed
+        enemy_update(enemy)
+        if enemy.dead then
+            deli(enemies, i)
+        end
+    end
+    enemy_bullets_update()
+    pillars_update()
     particles_update() -- do in any mode
     tf_spring_to(press_x_text, nil, press_x_text.target_y, 0.003)
     tf_update(press_x_text)
-    background_x -= level_speed / 10
-    if background_x < -48 then
-        background_x = 128
-        background_range_x = rnd(11)
-        background_len = min(3 + rnd(3), 13-background_range_x)
-    end
+    bkgr_update()
     if cam_shake > 0 then
         cam_shake -= 1
     end
-    camera(rnd(cam_shake), rnd(cam_shake))
 end
 
 function _draw()
@@ -128,9 +102,10 @@ function _draw()
     for i=0,127,8 do
         spr(80, i, 16, 1, 3)
     end
+    camera(rnd(cam_shake), rnd(cam_shake))
 
     --draw background--
-    map(background_range_x, 0, background_x, 16, background_len, 3)
+    bkgr_draw()
 
 
     local sine_y = -2.5*sin(t()/4)
@@ -175,6 +150,7 @@ function _draw()
         spr(23, bullet.x-4, bullet.y-4)
     end
 
+    camera()
     -- rectfill(0, gui_y, 127, gui_y+16, 1)
     -- line(0, gui_y, 128, gui_y, 7)
     local lives = ""
@@ -186,7 +162,6 @@ function _draw()
         print(lives.."  ", 1, 2, 7)
         score_str_length = print(score,0,-100)
         print(score, 127-score_str_length, 2)
-        print(player.hit_ctr)
 
     -- print("particles "..#foam_particles, 63, level_height+3)
     else -- draw main menu
@@ -194,7 +169,7 @@ function _draw()
             press_x_text.target_y = 92
             print("game over", 47, 31, 2)
             print("game over", 46, 30, 7)
-            print("SCORE", 53, 61, 7)
+            print("𝘴𝘤𝘰𝘳𝘦", 53, 61, 7)
             score_str_length = print("\^w\^t"..score,0,-100)
             print("\^w\^t"..score, 64-0.5*score_str_length, 50)
             pset(63,63)
