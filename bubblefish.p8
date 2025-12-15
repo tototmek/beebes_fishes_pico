@@ -18,7 +18,8 @@ end
 
 function bubblefish_atk(bf)
     for i=1,8 do
-        bubblefish_shoot(bf)
+        enemy_shoot(bf.draw_x, bf.y, -1.5, 0)
+        bf.dx -= 0.5
         yield()
     end
     bf.target_x = 148
@@ -35,11 +36,6 @@ end
 
 function bubblefish_draw(bf)  
     spr(7+time()*2%2 , flr(bf.draw_x-4), flr(bf.y-4), 1, 1)
-end
-
-function bubblefish_shoot(bf)
-    enemy_shoot(bf.draw_x, bf.y, -1.5, 0)
-    bf.dx -= 0.5
 end
 
 
