@@ -34,7 +34,7 @@ function init_gameplay()
     pillars, player_bullets, enemy_bullets, enemies, foam_particles, explosion_particles = {}, {}, {}, {}, {}, {}
     player = player_create()
     press_x_text.target_y = 160
-    medusa_spawn(16)
+    anglerfish_spawn(63)
 end
 
 

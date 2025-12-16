@@ -46,12 +46,13 @@ function sailfin_update(bf)
 end
 
 function sailfin_draw(bf)  
-    spr(20, flr(bf.x-12), flr(bf.y-4), 2, 1)
-    spr(6, flr(bf.x+4), flr(bf.y-9), 1, 2)
+    local draw_x, draw_y = bf.x, bf.y
+    spr(20, flr(draw_x-12), flr(draw_y-4), 2, 1)
+    spr(6, flr(draw_x+4), flr(draw_y-9), 1, 2)
     if bf.dashing == true then
-        rectfill(bf.x+6, bf.y-7, bf.x+128, bf.y+3, 8)
+        rectfill(draw_x+6, draw_y-7, draw_x+128, draw_y+3, 8)
         fillp(0b0101101001011010.1)
-        rectfill(bf.x+128, bf.y-7, bf.x+140, bf.y+3, 8)
+        rectfill(draw_x+128, draw_y-7, draw_x+140, draw_y+3, 8)
         fillp()
     end
 end
