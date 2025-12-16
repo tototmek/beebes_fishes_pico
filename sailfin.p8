@@ -35,7 +35,10 @@ end
 function sailfin_update(bf)
     tf_spring_to(bf, bf.target_x, bf.target_y, 0.002)
     if bf.dashing == true then
-        particle_spawn_foam(bf.x+12, bf.y, -1, 0.125-rnd(0.25))
+        if bf.x > -12 then
+            particle_spawn_foam(bf.x+12, bf.y-1, -3, 0.5-rnd(1))
+            particle_spawn_foam(bf.x+12, bf.y-1, -3, 0.5-rnd(1))
+        end
         if check_collision(bf, player) then
             player_get_hit()
         end
