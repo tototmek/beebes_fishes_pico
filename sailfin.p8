@@ -3,7 +3,7 @@ function sailfin_spawn(y)
         hp = 1, dead = false,
         target_x = 104, target_y = y,
         atk_func = cocreate(sailfin_atk),
-        die_func = function()end,
+        die_func = empty_func,
         update_func = sailfin_update,
         draw_func = sailfin_draw,
         atk_rate = 35,

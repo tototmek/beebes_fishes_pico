@@ -34,7 +34,7 @@ function init_gameplay()
     pillars, player_bullets, enemy_bullets, enemies, foam_particles, explosion_particles = {}, {}, {}, {}, {}, {}
     player = player_create()
     press_x_text.target_y = 160
-    rainbowgar_spawn(63)
+    medusa_spawn(16)
 end
 
 
@@ -53,6 +53,8 @@ function _update60()
             pillar_spawn(32+rnd(64), 24)
         elseif beat_counter % 62 == 0 then
             bubblefish_spawn(16+rnd(88))
+        elseif beat_counter % 87 == 0 then
+            medusa_spawn(16+rnd(88))
         elseif beat_counter % 80 == 0 then
             sailfin_spawn(16+rnd(88))
         elseif beat_counter % 133 == 0 then

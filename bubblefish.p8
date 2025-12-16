@@ -3,7 +3,7 @@ function bubblefish_spawn(y)
         hp = 1, dead = false,
         target_x = 104, target_y = y,
         atk_func = cocreate(bubblefish_atk),
-        die_func = function()end,
+        die_func = empty_func,
         update_func = bubblefish_update,
         draw_func = bubblefish_draw,
         atk_rate = 90,
@@ -87,4 +87,8 @@ function enemy_bullets_update()
             deli(enemy_bullets, i)
         end
     end
+end
+
+
+function empty_func()
 end
