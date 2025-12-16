@@ -34,7 +34,7 @@ function init_gameplay()
     pillars, player_bullets, enemy_bullets, enemies, foam_particles, explosion_particles = {}, {}, {}, {}, {}, {}
     player = player_create()
     press_x_text.target_y = 160
-    sailfin_spawn(63)
+    rainbowgar_spawn(63)
 end
 
 
@@ -57,8 +57,10 @@ function _update60()
             sailfin_spawn(16+rnd(88))
         elseif beat_counter % 133 == 0 then
             constellationfish_spawn(16+rnd(88))
-        elseif beat_counter % 216 == 0 then
+        elseif beat_counter % 316 == 0 then
             nautilus_spawn(16+rnd(88))
+        elseif beat_counter % 116 == 0 then
+            rainbowgar_spawn(63)
         end
     end
 

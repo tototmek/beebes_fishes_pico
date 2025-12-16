@@ -2,7 +2,6 @@ function bubblefish_spawn(y)
     local enemy = {
         hp = 1, dead = false,
         target_x = 104, target_y = y,
-        draw_x = 136,
         atk_func = cocreate(bubblefish_atk),
         die_func = function()end,
         update_func = bubblefish_update,
@@ -11,15 +10,17 @@ function bubblefish_spawn(y)
         beat_ctr = 0,
         seed = time(),
     }
-    add_tf(enemy, 136)
+    add_tf(enemy, 136, y)
     add_collider(enemy, 4, 4)
     add(enemies, enemy)
 end
 
 function bubblefish_atk(bf)
     for i=1,8 do
-        enemy_shoot(bf.draw_x, bf.y, -1.5, 0)
-        bf.dx -= 0.5
+        if bf.recurse_ctr != 2 then
+            enemy_shoot(bf.x-3, bf.y)
+            bf.dx -= 0.5
+        end
         yield()
     end
     bf.target_x = 148
@@ -29,19 +30,17 @@ end
 
 
 function bubblefish_update(bf)
-    tf_spring_to(bf, bf.target_x, nil, 0.001)
-    bf.y = bf.target_y + sin(bf.seed+time()/8) * 8
-    bf.draw_x = bf.x + cos(bf.seed+2137+time()/9) * 6
+    tf_spring_to(bf, bf.target_x + cos(bf.seed+2137*time()/9) * 6, bf.target_y + sin(bf.seed+time()/8) * 8, 0.001)
 end
 
 function bubblefish_draw(bf)  
-    spr(7+time()*2%2 , flr(bf.draw_x-4), flr(bf.y-4), 1, 1)
+    spr(7+time()*2%2 , flr(bf.x-4), flr(bf.y-4), 1, 1)
 end
 
 
 function enemy_shoot(x, y, dx, dy)
     local bullet = {}
-    add_tf(bullet, x, y, dx, dy)
+    add_tf(bullet, x, y, dx or -1.5, dy or 0)
     add_collider(bullet, 1, 1)
     bullet.drag = 1
     add(enemy_bullets, bullet)
