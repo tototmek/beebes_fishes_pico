@@ -12,7 +12,7 @@ function anglerfish_spawn(y)
         seed = time(),
         -- lights = {},
         dashing = false,
-        exploding = false,
+        exploding = 0,
         frame_ctr = 0,
         lights_out = false,
         lights = 3,
@@ -43,7 +43,6 @@ function anglerfish_atk(bf)
         while (bf.lights_out) do
             yield()
         end
-        bf.exploding = false
     end
     bf.target_x = 148
     yield()
@@ -71,8 +70,11 @@ function anglerfish_die(bf)
 end
 
 function anglerfish_update(bf)
-    if bf.exploding and rnd(1) < 0.05 then
-        explode_small(bf.x - 16 + rnd(32), bf.y - 16 + rnd(32))
+    if bf.exploding > 0 then
+        bf.exploding -= 1
+        if rnd(1) < 0.05 then
+            explode_small(bf.x - 16 + rnd(32), bf.y - 16 + rnd(32))
+        end
     end
     if bf.dashing then
         particle_spawn_foam(bf.x+12, bf.y-2, -3, 0.5-rnd(1))
@@ -101,10 +103,12 @@ function anglerfish_draw(bf)
         rectfill(draw_x+rectlen, draw_y-7, draw_x+rectlen*1.2, draw_y+3, 8)
         fillp()
     end
-    if bf.exploding then
+    if bf.exploding > 30 then
         pal(2, 7)
         pal(8, 7)
         pal(14, 7)
+        draw_x += rnd(2)-2
+        draw_y += rnd(2)-2
     end
     for i = 1,bf.lights do
         spr(50 , draw_x + 4-2*i, draw_y - 9-2*i, 1, 1) -- draw lights
@@ -112,13 +116,12 @@ function anglerfish_draw(bf)
     spr(32 , draw_x - 8, draw_y - 8, 2, 2)
     bf.frame_ctr += 0.1*abs(bf.dx)
     spr(34+bf.frame_ctr%2 , draw_x+8, draw_y - 8, 1, 1)
-    if bf.exploding then
+    if bf.exploding > 30 then
         pal(2, 2)
         pal(8, 8)
         pal(14, 14)
     end
 end
-
 
 
 
@@ -153,7 +156,7 @@ end
 function anglerfish_light_die(bf)
     bf.parent.lights_out = false
     bf.parent.hp -= 1
-    bf.parent.exploding = true
+    bf.parent.exploding = 100
     explode_small(bf.parent.x, bf.parent.y-8)
 end
 
