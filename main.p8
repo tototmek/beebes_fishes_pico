@@ -45,26 +45,26 @@ function _update60()
 
     --update level generator--
     in_beat_ctr+=1
-    if in_beat_ctr > beat_time then
-        in_beat_ctr = 0
-        beat_counter += 1
-        if beat_counter % 23 == 0 then -- every 2.3 seconds
-            -- pillar_spawn(32 + rnd(80), 24 + rnd(16))
-            pillar_spawn(32+rnd(64), 24)
-        elseif beat_counter % 62 == 0 then
-            bubblefish_spawn(16+rnd(88))
-        elseif beat_counter % 87 == 0 then
-            medusa_spawn(16+rnd(88))
-        elseif beat_counter % 80 == 0 then
-            sailfin_spawn(16+rnd(88))
-        elseif beat_counter % 133 == 0 then
-            constellationfish_spawn(16+rnd(88))
-        elseif beat_counter % 316 == 0 then
-            nautilus_spawn(16+rnd(88))
-        elseif beat_counter % 116 == 0 then
-            rainbowgar_spawn(63)
-        end
-    end
+    -- if in_beat_ctr > beat_time then
+    --     in_beat_ctr = 0
+    --     beat_counter += 1
+    --     if beat_counter % 23 == 0 then -- every 2.3 seconds
+    --         -- pillar_spawn(32 + rnd(80), 24 + rnd(16))
+    --         pillar_spawn(32+rnd(64), 24)
+    --     elseif beat_counter % 62 == 0 then
+    --         bubblefish_spawn(16+rnd(88))
+    --     elseif beat_counter % 87 == 0 then
+    --         medusa_spawn(16+rnd(88))
+    --     elseif beat_counter % 80 == 0 then
+    --         sailfin_spawn(16+rnd(88))
+    --     elseif beat_counter % 133 == 0 then
+    --         constellationfish_spawn(16+rnd(88))
+    --     elseif beat_counter % 316 == 0 then
+    --         nautilus_spawn(16+rnd(88))
+    --     elseif beat_counter % 116 == 0 then
+    --         rainbowgar_spawn(63)
+    --     end
+    -- end
 
 
     else -- end of main game loop, menu code below

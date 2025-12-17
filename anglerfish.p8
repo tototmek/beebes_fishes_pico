@@ -29,19 +29,18 @@ end
 
 function anglerfish_atk(bf)
     yield()
-    for k = 1,6 do
-        anglerfish_light_spawn(bf)
+    for k = 1,9 do
+        for i=1,4 do -- random dashes
+            yield()
+            anglerfish_dash(bf)
+            bf.target_y = min(max(32,player.y + player.dy * 8 + rnd(16) - 8),112)
+        end
+        yield()
+        yield()
+        anglerfish_light_spawn(bf) -- spawn the light
         while (bf.lights_out) do
             yield()
         end
-
-        for i=1,5 do -- random dashes
-            yield()
-            anglerfish_dash(bf)
-            bf.target_y = max(32,player.y + player.dy * 8 + rnd(16) - 8)
-        end
-        yield()
-        yield()
     end
     bf.target_x = 148
     yield()
@@ -56,7 +55,7 @@ function anglerfish_dash(bf)
     bf.dy = 0
     bf.dx = 1.2
     yield()
-    sfx(10)
+    sfx(9)
     explode_small(bf.x+12, bf.y)
     bf.dx = -9
     bf.dashing = true
@@ -82,6 +81,7 @@ function anglerfish_update(bf)
 end
 
 function anglerfish_hit(enemy, bullet, i)
+    sfx(11)
     particle_spawn_torpedo(bullet.x, bullet.y, (bullet.y - enemy.y)/8)
     deli(player_bullets, i)
 end
@@ -137,6 +137,7 @@ end
 function anglerfish_light_die(bf)
     bf.parent.lights_out = false
     bf.parent.hp -= 1
+    explode_small(bf.parent.x, bf.parent.y-8)
 end
 
 function anglerfish_light_draw(bf)
