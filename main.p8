@@ -26,6 +26,7 @@ function _init()
     bkgr_init()
 end
 
+
 function init_gameplay()
     music(6)
     score = 0
