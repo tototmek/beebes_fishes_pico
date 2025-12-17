@@ -24,8 +24,8 @@ function rainbowgar_die(bf)
     local recursion = bf.recurse_ctr
     if (recursion > 2) return
     sfx(10)
-    rainbowgar_spawn(bf.target_y+32/recursion, recursion+1, bf.x, bf.y)
-    rainbowgar_spawn(bf.target_y-32/recursion, recursion+1, bf.x, bf.y)
+    rainbowgar_spawn(bf.target_y+24/recursion, recursion+1, bf.x, bf.y)
+    rainbowgar_spawn(bf.target_y-24/recursion, recursion+1, bf.x, bf.y)
 end
 
 

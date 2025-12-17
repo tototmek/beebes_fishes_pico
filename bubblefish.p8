@@ -90,5 +90,17 @@ function enemy_bullets_update()
 end
 
 
+function enemy_get_hit(enemy, bullet, i)
+    if enemy.hit_func then
+        enemy.hit_func(enemy, bullet, i)
+        return
+    end
+    explode_big((bullet.x+6+enemy.x)/2, (bullet.y+enemy.y)/2)
+    enemy.hp -= 1
+    sfx(5)
+    deli(player_bullets, i)
+end
+
+
 function empty_func()
 end

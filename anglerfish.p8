@@ -1,17 +1,20 @@
-function anglerfish_spawn(y) --WIP
+function anglerfish_spawn(y)
     local enemy = {
-        hp = 1, dead = false,
+        hp = 3, dead = false,
         target_x = 104, target_y = y,
         atk_func = cocreate(anglerfish_atk),
         die_func = anglerfish_die,
         update_func = anglerfish_update,
         draw_func = anglerfish_draw,
-        atk_rate = 50,
+        hit_func = anglerfish_hit,
+        atk_rate = 40,
         beat_ctr = 0,
         seed = time(),
         -- lights = {},
         dashing = false,
         frame_ctr = 0,
+        lights_out = false,
+        lights = 3,
     }
     -- enemy.lights[1] = {id=-1}
     -- enemy.lights[2] = {id=0}
@@ -20,14 +23,25 @@ function anglerfish_spawn(y) --WIP
     -- add_tf(enemy.lights[1], 166, y)
     -- add_tf(enemy.lights[2], 166, y)
     -- add_tf(enemy.lights[3], 166, y)
-    add_collider(enemy, 8, 8)
+    add_collider(enemy, 2, 7)
     add(enemies, enemy)
 end
 
 function anglerfish_atk(bf)
-    for i=1,8 do
-        anglerfish_dash(bf)
-        bf.target_y = 16+rnd(112)
+    yield()
+    for k = 1,6 do
+        anglerfish_light_spawn(bf)
+        while (bf.lights_out) do
+            yield()
+        end
+
+        for i=1,5 do -- random dashes
+            yield()
+            anglerfish_dash(bf)
+            bf.target_y = max(32,player.y + player.dy * 8 + rnd(16) - 8)
+        end
+        yield()
+        yield()
     end
     bf.target_x = 148
     yield()
@@ -38,8 +52,8 @@ end
 
 function anglerfish_dash(bf)
     yield()
-    yield()
     sfx(6)
+    bf.dy = 0
     bf.dx = 1.2
     yield()
     sfx(10)
@@ -51,27 +65,25 @@ function anglerfish_dash(bf)
 end
 
 function anglerfish_die(bf)
-    local shoot_x, shoot_y = bf.x, bf.y
-    enemy_shoot(shoot_x, shoot_y, -0.5, -0.75)
-    enemy_shoot(shoot_x, shoot_y, -0.8, -0.5)
-    enemy_shoot(shoot_x, shoot_y, -1.0)
-    enemy_shoot(shoot_x, shoot_y, -0.8, 0.5)
-    enemy_shoot(shoot_x, shoot_y, -0.5, 0.75)
+    explode_big(bf.x, bf.y)
 end
 
 function anglerfish_update(bf)
-    tf_spring_to(bf, bf.target_x + cos(bf.seed+time()/9)*6, bf.target_y+sin(bf.seed+time()/8), 0.0008)
-    for light in all(bf.lights) do
-        tf_update(light)
-    end
     if bf.dashing then
-        particle_spawn_foam(bf.x+12, bf.y-1, -3, 0.5-rnd(1))
-        particle_spawn_foam(bf.x+12, bf.y-1, -3, 0.5-rnd(1))
+        particle_spawn_foam(bf.x+12, bf.y-2, -3, 0.5-rnd(1))
+        particle_spawn_foam(bf.x+12, bf.y-2, -3, 0.5-rnd(1))
         if check_collision(bf, player) then
             player_get_hit()
             bf.dashing = false
         end
+    else
+        tf_spring_to(bf, bf.target_x + cos(bf.seed+time()/9)*6, bf.target_y+sin(bf.seed+time()/8), 0.0014)
     end
+end
+
+function anglerfish_hit(enemy, bullet, i)
+    particle_spawn_torpedo(bullet.x, bullet.y, (bullet.y - enemy.y)/8)
+    deli(player_bullets, i)
 end
 
 function anglerfish_draw(bf) 
@@ -83,11 +95,72 @@ function anglerfish_draw(bf)
         rectfill(draw_x+rectlen, draw_y-7, draw_x+rectlen*1.2, draw_y+3, 8)
         fillp()
     end
-    -- for light in all(bf.lights) do
-    --     line(light.x, light.y,  bf.x, bf.y - 4, 14)
-    --     spr(50, light.x - 4, light.y - 4)
-    -- end
+    for i = 1,bf.lights do
+        spr(50 , draw_x + 4-2*i, draw_y - 9-2*i, 1, 1) -- draw lights
+    end
     spr(32 , draw_x - 8, draw_y - 8, 2, 2)
     bf.frame_ctr += 0.1*abs(bf.dx)
     spr(34+bf.frame_ctr%2 , draw_x+8, draw_y - 8, 1, 1)
+end
+
+
+
+
+function anglerfish_light_spawn(anglerfish)
+    local enemy = {
+        hp = 1, dead = false,
+        atk_func = cocreate(anglerfish_light_atk),
+        die_func = anglerfish_light_die,
+        update_func = anglerfish_light_update,
+        draw_func = anglerfish_light_draw,
+        atk_rate = 80,
+        beat_ctr = 0,
+        seed = time(),
+        parent = anglerfish,
+        returning = false,
+    }
+    anglerfish.lights -= 1
+    anglerfish.lights_out = true
+    add_tf(enemy, anglerfish.x-1, anglerfish.y-10)
+    add_collider(enemy, 4, 4)
+    add(enemies, enemy)
+end
+
+function anglerfish_light_update(bf)
+    if bf.returning == true then 
+        tf_spring_to(bf, bf.parent.x-1, bf.parent.y-10, 0.002)
+    else
+        tf_spring_to(bf, bf.parent.x-20+sin(time()/2)*8, bf.parent.y-32+cos(time()/2.1)*8, 0.0015)
+    end
+end
+
+function anglerfish_light_die(bf)
+    bf.parent.lights_out = false
+    bf.parent.hp -= 1
+end
+
+function anglerfish_light_draw(bf)
+    sx, sy = bf.x, bf.y
+    dx, dy = bf.parent.x+2-bf.parent.lights*2 - sx, bf.parent.y-9 - sy
+    line(sx, sy, sx+0.5*dx, sy+0.125*dy, 8)
+    line(sx+0.5*dx, sy+0.125*dy, sx+0.75*dx, sy+0.3*dy)
+    line(sx+0.75*dx, sy+0.3*dy, sx+0.9*dx, sy+0.6*dy)
+    line(sx+0.9*dx, sy+0.6*dy, sx+dx, sy+dy, 8)
+    spr(24, bf.x-4, bf.y-4)
+end
+
+function anglerfish_light_atk(bf)
+    for i=1,5 do
+        local shoot_x, shoot_y = bf.x, bf.y
+        enemy_shoot(shoot_x, shoot_y, -0.8, -0.75)
+        enemy_shoot(shoot_x, shoot_y, -1.0, -0.25)
+        enemy_shoot(shoot_x, shoot_y, -1.0, 0.25)
+        enemy_shoot(shoot_x, shoot_y, -0.8, 0.75)
+        yield()
+    end
+    bf.returning = true
+    yield()
+    bf.parent.lights_out = false
+    bf.parent.lights += 1
+    bf.dead = true
 end

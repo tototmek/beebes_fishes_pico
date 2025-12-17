@@ -9,6 +9,12 @@ function particle_spawn_explosion(x, y, size, dx, color)
     add(explosion_particles, explosion)
 end
 
+function particle_spawn_torpedo(x, y, dy)
+    local torpedo = {lifetime = 0}
+    add_tf(torpedo, x, y, -1, dy, 0.04)
+    add(torpedo_particles, torpedo)
+end
+
 function explode_big(x, y)
     particle_spawn_explosion(x, y, 17, 0, 8)
     for i=1,24 do
@@ -23,6 +29,7 @@ function explode_small(x, y)
     end
     sfx(2)
 end
+
 
 
 function particles_update()
@@ -43,10 +50,10 @@ function particles_update()
             deli(explosion_particles, i)
         end
     end
-    for k, particle in pairs(back_particles) do
-        if (k > 13) then 
+    for i, particle in ipairs(back_particles) do
+        if (i > 13) then 
             particle[1] -= level_speed * 0.8
-        elseif (k > 5) then
+        elseif (i > 5) then
             particle[1] -= level_speed * 0.6
         else
             particle[1] -= level_speed * 0.4
@@ -54,6 +61,14 @@ function particles_update()
         if particle[1] < -1 then
             particle[1] = 128
             particle[2] = rnd(127)
+        end
+    end
+    for i, torpedo in ipairs(torpedo_particles) do
+        torpedo.lifetime += 1
+        tf_update(torpedo)
+        if torpedo.lifetime > 25 then
+            explode_small(torpedo.x, torpedo.y)
+            deli(torpedo_particles, i)
         end
     end
 end
@@ -69,6 +84,9 @@ function particles_draw()
         circfill(explo.x, explo.y, explo.one_minus_size)
         fillp()
     end 
+    for torpedo in all(torpedo_particles) do
+        spr(4, torpedo.x-8, torpedo.y-4, 2, 1)
+    end
     for foam in all(foam_particles) do
         circfill(foam.x, foam.y, foam.size, 6)
     end 

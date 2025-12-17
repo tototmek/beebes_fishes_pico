@@ -95,11 +95,8 @@ function player_bullets_update()
         end
         if bullet.x < 116 do
             for enemy in all(enemies) do
-                if check_collision(enemy, bullet, 2) then 
-                    explode_big((bullet.x+6+enemy.x)/2, (bullet.y+enemy.y)/2)
-                    enemy.hp -= 1
-                    sfx(5)
-                    deli(player_bullets, i)
+                if check_collision(enemy, bullet, 2) then
+                    enemy_get_hit(enemy, bullet, i)
                 end
             end
         end

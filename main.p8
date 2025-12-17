@@ -31,7 +31,7 @@ function init_gameplay()
     score = 0
     playing, game_over = true, false
     dead_ctr, beat_counter, in_beat_ctr, beat_time = 0, 0, 0, 6
-    pillars, player_bullets, enemy_bullets, enemies, foam_particles, explosion_particles = {}, {}, {}, {}, {}, {}
+    pillars, player_bullets, enemy_bullets, enemies, foam_particles, explosion_particles, torpedo_particles = {}, {}, {}, {}, {}, {}, {}
     player = player_create()
     press_x_text.target_y = 160
     anglerfish_spawn(63)
