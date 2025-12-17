@@ -1,5 +1,5 @@
 function rainbowgar_spawn(y, recursion, s_x, s_y)
-    local enemy = {
+    local enemy = {id = 7,
         hp = 1, dead = false,
         target_x = 104, target_y = y,
         atk_func = cocreate(bubblefish_atk),

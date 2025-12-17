@@ -1,6 +1,7 @@
 function _init()
     poke(0x5f5c, 0xff) --no button repeat--
     poke(0x5f5d, 0xff) --no button repeat--
+    cartdata("beebes_fishes_1")
     music(1)
     
     environment = {
@@ -14,6 +15,9 @@ function _init()
     level_height, level_speed = 112, 2/3
     dead_ctr = 2137
     cam_shake = 0
+    catalogue = false
+    catalogue_y = -128
+    cam_y = 0
 
     press_x_text = {target_y = 92}
     add_tf(press_x_text, 33, 128)
@@ -29,6 +33,7 @@ end
 
 function init_gameplay()
     music(6)
+    cam_y = 0
     score = 0
     playing, game_over = true, false
     dead_ctr, beat_counter, in_beat_ctr, beat_time = 0, 0, 0, 6
@@ -36,6 +41,8 @@ function init_gameplay()
     player = player_create()
     press_x_text.target_y = 160
     anglerfish_spawn(63)
+    bubblefish_spawn(33)
+    bubblefish_spawn(93)
 end
 
 
@@ -70,12 +77,14 @@ function _update60()
 
     else -- end of main game loop, menu code below
     dead_ctr += 1
-    if btnp(4) or btnp(5) then -- pressed play
+    if (btnp(4) or btnp(5)) and not catalogue then -- pressed play
         if (dead_ctr > 50) then
             init_gameplay()
             sfx(1)
         end
     end
+    if (btnp(2)) catalogue = true
+    if (btnp(3)) catalogue = false
     if game_over then
         player.ddy = 0.02
         player.ddx = -0.004
@@ -106,11 +115,12 @@ function _draw()
     pal(4, 129, 1) -- add blues to pallette
     pal(5, 140, 1)
     cls(4)
+    rectfill(0, -128, 128, 0, 1)
     rectfill(0, 0, 127, 16, 1)
     for i=0,127,8 do
         spr(80, i, 16, 1, 3)
     end
-    camera(rnd(cam_shake), rnd(cam_shake))
+    camera(rnd(cam_shake), cam_y + rnd(cam_shake))
 
     --draw background--
     bkgr_draw()
@@ -158,7 +168,7 @@ function _draw()
         spr(23, bullet.x-4, bullet.y-4)
     end
 
-    camera()
+    camera(0, cam_y)
     -- rectfill(0, gui_y, 127, gui_y+16, 1)
     -- line(0, gui_y, 128, gui_y, 7)
     local lives = ""
@@ -173,6 +183,13 @@ function _draw()
 
     -- print("particles "..#foam_particles, 63, level_height+3)
     else -- draw main menu
+        if catalogue then
+            display_catalogue()
+            cam_y += 0.15 * (catalogue_y - cam_y)
+        else
+            cam_y -= 0.1 * cam_y
+            if (cam_y > -0.6) cam_y = 0
+        end
         if game_over then
             press_x_text.target_y = 92
             print("game over", 47, 31, 2)

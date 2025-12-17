@@ -1,5 +1,5 @@
 function anglerfish_spawn(y)
-    local enemy = {
+    local enemy = {id = 2,
         hp = 3, dead = false,
         target_x = 104, target_y = y,
         atk_func = cocreate(anglerfish_atk),
@@ -34,7 +34,7 @@ function anglerfish_atk(bf)
         for i=1,4 do -- random dashes
             yield()
             anglerfish_dash(bf)
-            bf.target_y = min(max(32,player.y + player.dy * 8 + rnd(16) - 8),112)
+            bf.target_y = min(max(39,player.y + player.dy * 8 + rnd(16) - 8),112)
         end
         yield()
         yield()

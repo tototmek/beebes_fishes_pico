@@ -1,5 +1,5 @@
 function nautilus_spawn(y)
-    local enemy = {
+    local enemy = {id = 5,
         hp = 1, dead = false,
         target_x = 104, target_y = y,
         atk_func = cocreate(nautilus_atk),
@@ -48,7 +48,7 @@ end
 
 
 function naked_nautilus_spawn(x, y)
-    local enemy = {
+    local enemy = {id = 6,
         hp = 1, dead = false,
         target_x = x, target_y = y,
         atk_func = cocreate(naked_nautilus_atk),

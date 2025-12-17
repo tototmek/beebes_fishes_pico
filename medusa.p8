@@ -1,5 +1,5 @@
 function medusa_spawn(y)
-    local enemy = {
+    local enemy = {id = 4,
         hp = 1, dead = false,
         atk_func = cocreate(medusa_atk),
         die_func = empty_func,

@@ -1,5 +1,5 @@
 function bubblefish_spawn(y)
-    local enemy = {
+    local enemy = {id = 1,
         hp = 1, dead = false,
         target_x = 104, target_y = y,
         atk_func = cocreate(bubblefish_atk),
@@ -53,6 +53,7 @@ function enemy_update(enemy)
     if enemy.hp < 1 then
         enemy.dead = true
         score += 1
+        if (enemy.id) catalogue_unlock_fish(enemy.id)
         enemy.die_func(enemy)
     end
     enemy.beat_ctr += 1

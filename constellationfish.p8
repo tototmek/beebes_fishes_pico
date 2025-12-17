@@ -1,5 +1,5 @@
 function constellationfish_spawn(y)
-    local enemy = {
+    local enemy = {id = 2,
         hp = 1, dead = false,
         target_x = 104,
         atk_func = cocreate(constellationfish_atk),
