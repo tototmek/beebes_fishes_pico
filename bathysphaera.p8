@@ -39,18 +39,16 @@ function bathysphaera_atk(bf)
     while true do
         local shoot_x, shoot_y = bf.line_end_1_x, bf.line_end_1_y
         if shoot_x < 128 then
-            enemy_shoot(shoot_x, shoot_y, -0.8, -0.75)
-            enemy_shoot(shoot_x, shoot_y, -1.0, -0.25)
-            enemy_shoot(shoot_x, shoot_y, -1.0, 0.25)
-            enemy_shoot(shoot_x, shoot_y, -0.8, 0.75)
+            enemy_shoot(shoot_x, shoot_y, -0.8, -0.5)
+            enemy_shoot(shoot_x, shoot_y, -1.0)
+            enemy_shoot(shoot_x, shoot_y, -0.8, 0.5)
         end
         yield()
         local shoot_x, shoot_y = bf.line_end_2_x, bf.line_end_2_y
         if shoot_x < 128 then
-            enemy_shoot(shoot_x, shoot_y, -0.8, -0.75)
-            enemy_shoot(shoot_x, shoot_y, -1.0, -0.25)
-            enemy_shoot(shoot_x, shoot_y, -1.0, 0.25)
-            enemy_shoot(shoot_x, shoot_y, -0.8, 0.75)
+            enemy_shoot(shoot_x, shoot_y, -0.8, -0.5)
+            enemy_shoot(shoot_x, shoot_y, -1.0)
+            enemy_shoot(shoot_x, shoot_y, -0.8, 0.5)
             yield()
         end
     end

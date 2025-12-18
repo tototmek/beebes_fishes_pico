@@ -1,5 +1,10 @@
 function bubblefish_spawn(y)
-    local enemy = {id = 1,
+    if rnd(1) > 0.85 then
+        sprite, id = 60, 10
+    else
+        sprite, id = 7, 1
+    end
+    local enemy = {id = id,
         hp = 1, dead = false,
         target_x = 104, target_y = y,
         atk_func = cocreate(bubblefish_atk),
@@ -9,6 +14,7 @@ function bubblefish_spawn(y)
         atk_rate = 90,
         beat_ctr = 0,
         seed = time(),
+        spr = sprite,
     }
     add_tf(enemy, 136, y)
     add_collider(enemy, 4, 4)
@@ -34,7 +40,7 @@ function bubblefish_update(bf)
 end
 
 function bubblefish_draw(bf)  
-    spr(7+time()*2%2 , flr(bf.x-4), flr(bf.y-4), 1, 1)
+    spr(bf.spr+time()*2%2 , flr(bf.x-4), flr(bf.y-4), 1, 1)
 end
 
 
