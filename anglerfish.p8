@@ -73,7 +73,7 @@ function anglerfish_update(bf)
     if bf.exploding > 0 then
         bf.exploding -= 1
         if rnd(1) < 0.05 then
-            explode_small(bf.x - 16 + rnd(32), bf.y - 16 + rnd(32))
+            explode_small(bf.x - 12 + rnd(24), bf.y - 12 + rnd(24))
         end
     end
     if bf.dashing then

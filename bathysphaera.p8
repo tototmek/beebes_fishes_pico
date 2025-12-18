@@ -1,13 +1,13 @@
 function bathysphaera_spawn(y)
     local enemy = {id = 9,
-        hp = 24, dead = false,
+        hp = 30, dead = false,
         target_x = 136, target_y = y,
         atk_func = cocreate(bathysphaera_atk),
-        die_func = empty_func,
+        die_func = bathysphaera_die,
         update_func = bathysphaera_update,
         draw_func = bathysphaera_draw,
         hit_func = bathysphaera_get_hit,
-        atk_rate = 70,
+        atk_rate = 100,
         beat_ctr = 0,
         seed = time() + rnd(1),
         frame_ctr = 0,
@@ -15,10 +15,20 @@ function bathysphaera_spawn(y)
         prev_y = {},
         length = 75,
         exploding = 0,
+        line_points_x = {},
+        line_points_y = {},
+        line_end_1_x = 0,
+        line_end_2_x = 0,
+        line_end_1_y = 0,
+        line_end_2_y = 0,
     }
     for i=1,enemy.length*2 do
         enemy.prev_x[i] = 136
         enemy.prev_y[i] = y
+    end
+    for i=1,20 do
+        enemy.line_points_x[i] = 286
+        enemy.line_points_y[i] = y
     end
     add_tf(enemy, 136, y)
     add_collider(enemy, 4, 4)
@@ -26,6 +36,24 @@ function bathysphaera_spawn(y)
 end
 
 function bathysphaera_atk(bf)
+    while true do
+        local shoot_x, shoot_y = bf.line_end_1_x, bf.line_end_1_y
+        if shoot_x < 128 then
+            enemy_shoot(shoot_x, shoot_y, -0.8, -0.75)
+            enemy_shoot(shoot_x, shoot_y, -1.0, -0.25)
+            enemy_shoot(shoot_x, shoot_y, -1.0, 0.25)
+            enemy_shoot(shoot_x, shoot_y, -0.8, 0.75)
+        end
+        yield()
+        local shoot_x, shoot_y = bf.line_end_2_x, bf.line_end_2_y
+        if shoot_x < 128 then
+            enemy_shoot(shoot_x, shoot_y, -0.8, -0.75)
+            enemy_shoot(shoot_x, shoot_y, -1.0, -0.25)
+            enemy_shoot(shoot_x, shoot_y, -1.0, 0.25)
+            enemy_shoot(shoot_x, shoot_y, -0.8, 0.75)
+            yield()
+        end
+    end
 end
 
 function bathysphaera_get_hit(bf, bullet, i)
@@ -35,6 +63,12 @@ function bathysphaera_get_hit(bf, bullet, i)
     sfx(5)
     deli(player_bullets, i)
     bf.length = 3*(bf.hp+1)
+end
+
+function bathysphaera_die(bf)
+    explode_big(bf.x, bf.y)
+    explode_big(bf.line_end_1_x, bf.line_end_1_y)
+    explode_big(bf.line_end_2_x, bf.line_end_2_y)
 end
 
 function bathysphaera_update(bf)
@@ -55,13 +89,29 @@ function bathysphaera_update(bf)
     if bf.exploding > 0 then
         bf.exploding -= 1
     end
-    for i, x in ipairs(bf.prev_x) do
+    for i = 1,bf.length do
         for k, bullet in ipairs(player_bullets) do
-            if abs(bullet.x - x) < 2 and abs(bullet.y - bf.prev_y[i]) < 2 do
+            if abs(bullet.x - bf.prev_x[i]) < 2 and abs(bullet.y - bf.prev_y[i]) < 2 do
                 bathysphaera_get_hit(bf, bullet, k)
             end
         end
     end
+    bf.line_points_x[1] = bf.x 
+    bf.line_points_y[1] = bf.y+6
+    bf.line_points_x[2] = bf.prev_x[flr(0.75*bf.length)] 
+    bf.line_points_y[2] = bf.prev_y[flr(0.75*bf.length)]+8
+    for i=3,20,2 do
+        bf.line_points_x[i] += 0.04 * (bf.line_points_x[i-2] - bf.line_points_x[i]) - 0.1
+        bf.line_points_y[i] += 0.04 * (bf.line_points_y[i-2] - bf.line_points_y[i]) + 0.02
+        bf.line_points_x[i+1] += 0.04 * (bf.line_points_x[i-1] - bf.line_points_x[i+1]) - 0.1
+        bf.line_points_y[i+1] += 0.04 * (bf.line_points_y[i-1] - bf.line_points_y[i+1]) + 0.02
+    end
+    bf.line_points_y[3] += 0.1
+    bf.line_points_y[4] += 0.15
+    bf.line_end_1_x = bf.line_points_x[#bf.line_points_x-1]
+    bf.line_end_2_x = bf.line_points_x[#bf.line_points_x]
+    bf.line_end_1_y = bf.line_points_y[#bf.line_points_y-1]
+    bf.line_end_2_y = bf.line_points_y[#bf.line_points_y]
 end
 
 function bathysphaera_draw(bf)  
@@ -70,6 +120,11 @@ function bathysphaera_draw(bf)
         pal(8, 7)
         pal(14, 7)
     end
+    line(flr(bf.line_points_x[2]), flr(bf.line_points_y[2]), bf.prev_x[flr(0.75*bf.length)], bf.prev_y[flr(0.75*bf.length)]+3, 8)
+    for i=3,20,2 do
+        line(flr(bf.line_points_x[i-1]), flr(bf.line_points_y[i-1]), flr(bf.line_points_x[i+1]), flr(bf.line_points_y[i+1]))
+    end
+    spr(24, bf.line_end_2_x-4, bf.line_end_2_y-4)
     local flip_tail =  bf.prev_x[bf.length] < bf.prev_x[bf.length-1]
     local offset = 3
     if (flip_tail) offset = -3
@@ -94,6 +149,11 @@ function bathysphaera_draw(bf)
             end
         end
     end
+    line(flr(bf.line_points_x[1]), flr(bf.line_points_y[1]), bf.x, bf.y+3, 8)
+    for i=3,20,2 do
+        line(flr(bf.line_points_x[i-2]), flr(bf.line_points_y[i-2]), flr(bf.line_points_x[i]), flr(bf.line_points_y[i]))
+    end
+    spr(24, bf.line_end_1_x-4, bf.line_end_1_y-4)
     if bf.dx > 0.12 then
         spr(41, draw_x-7, draw_y-4, 2, 1, true)
     elseif bf.dx < -0.15 then
