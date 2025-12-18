@@ -40,9 +40,7 @@ function init_gameplay()
     pillars, player_bullets, enemy_bullets, enemies, foam_particles, explosion_particles, torpedo_particles = {}, {}, {}, {}, {}, {}, {}
     player = player_create()
     press_x_text.target_y = 160
-    anglerfish_spawn(63)
-    bubblefish_spawn(33)
-    bubblefish_spawn(93)
+    bathysphaera_spawn(63)
 end
 
 
