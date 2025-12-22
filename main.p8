@@ -40,6 +40,8 @@ function init_gameplay()
     pillars, player_bullets, enemy_bullets, enemies, foam_particles, explosion_particles, torpedo_particles = {}, {}, {}, {}, {}, {}, {}
     player = player_create()
     press_x_text.target_y = 160
+    spawners_init()
+    bathysphaera_spawn(63)
 end
 
 
@@ -57,7 +59,7 @@ function _update60()
             coresume(pillar_spawner_coroutine)
         end
         if costatus(spawner_coroutine) then
-            coresume(spawner_coroutine)
+            -- coresume(spawner_coroutine)
         end
         -- if beat_counter % 23 == 0 then -- every 2.3 seconds
         --     -- pillar_spawn(32 + rnd(80), 24 + rnd(16))

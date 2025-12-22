@@ -84,7 +84,7 @@ function bathysphaera_update(bf)
             bf.prev_y[i+1] = bf.prev_y[i]
         end
     end
-    if bf.exploding > 0 then
+    if bf.exploding > 0 the
         bf.exploding -= 1
     end
     for i = 1,bf.length do

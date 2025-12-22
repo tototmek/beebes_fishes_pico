@@ -1,6 +1,3 @@
-spawner_stage = 1
-spawner_current_spr = 0
-spawner_pillar_rate = 0
 
 spawn_functions = {
     bubblefish_spawn,
@@ -14,6 +11,13 @@ spawn_functions = {
     bathysphaera_spawn,
 }
 
+function spawners_init()
+    spawner_stage = 1
+    spawner_current_spr = 0
+    spawner_pillar_rate = 0
+    pillar_spawner_coroutine = cocreate(pillar_spawner_run)
+    spawner_coroutine = cocreate(spawner_run)
+end
 
 function pillar_spawner_run()
     while true do
@@ -37,7 +41,7 @@ function spawner_run()
         yield()
     end
     spawner_stage = 1
-    while spawner_stage < 8 do
+    while spawner_stage < 7 do
         for i=1,4 do
             spawner_perform_random_sprite()
         end
@@ -80,7 +84,3 @@ function spawner_perform_sprite(spr_id)
         yield()
     end
 end
-
-
-pillar_spawner_coroutine = cocreate(pillar_spawner_run)
-spawner_coroutine = cocreate(spawner_run)
