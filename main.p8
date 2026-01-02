@@ -91,16 +91,20 @@ function _update60()
     if (btnp(3)) catalogue = false
     if catalogue then -- catalogue button logic
         if (btnp(0)) then --left
+            sfx(13)
             selected_fish = min(#catalogue_draw_functions, max(1, selected_fish - 1))
         end
         if (btnp(1)) then --right
+            sfx(13)
             selected_fish = min(#catalogue_draw_functions, max(1, selected_fish + 1))
         end
     else -- menu button logic
         if (btnp(0)) then --left
+            sfx(13)
             selected_checkpoint = min(total_checkpoints, max(0, selected_checkpoint - 1))
         end
         if (btnp(1)) then --right
+            sfx(13)
             selected_checkpoint = min(total_checkpoints, max(0, selected_checkpoint + 1))
         end
     end

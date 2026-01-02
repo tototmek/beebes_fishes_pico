@@ -1,5 +1,4 @@
 function catalogue_unlock_fish(index)
-    new_value = dget(0) | (1 << (index-1))
     dset(0, dget(0) | (1 << (index-1)))
 end
 
