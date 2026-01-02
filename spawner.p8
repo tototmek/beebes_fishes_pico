@@ -49,8 +49,8 @@ function spawner_run()
         spawner_perform_final_sprite()
         spawner_stage+=1
         spawner_current_spr = 0
-        if spawner_stage > dget(1) then
-            dset(1, spawner_stage)
+        if spawner_stage-1 > dget(1) then
+            dset(1, spawner_stage-1)
             printh("Checkpoint unlocked")
         end
     end

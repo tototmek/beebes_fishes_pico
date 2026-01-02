@@ -14,7 +14,7 @@ end
 
 
 function bathysphaera_draw_mock(bf)
-    local length = 50
+    local length = 40
     local draw_x, draw_y = bf.x, bf.y
     for i=length,1,-1 do
         local seg_x, seg_y = bf.x + i*2, bf.y
@@ -52,28 +52,41 @@ catalogue_draw_functions = {
     constellationfish_draw,
     anglerfish_draw,
     medusa_draw,
+    bubblefish2_draw_wrapper,
     nautilus_draw,
     naked_nautilus_draw,
     rainbowgar_draw,
     sailfin_draw,
     bathysphaera_draw_mock,
-    bubblefish2_draw_wrapper,
 }
 
 catalogue_names = {
-    "bubblefish",
+    "hatchetfish",
     "five-striped constellation fish",
     "three-starred anglerfish",
-    "medusa",
+    "giant jelly",
+    "manefish",
     "nautilus",
     "naked nautilus",
     "abyssal rainbow gar",
     "pallid sailfin",
     "giant dragonfish",
-    "bubblefish2",
 }
 
-catalogue_draw_positions = {}
+catalogue_surnames = {
+    "argyropelecus aculeatus",
+    "bathysidus pentagrammus",
+    "bathyceratias trilynchnus",
+    "stygiomedusa gigantea",
+    "platyberyx opalescens",
+    "nautilus belauensis",
+    "nautilus nudus",
+    "abyssobelonidus atlanticus",
+    "bathyembryx istiophasma",
+    "bathysphaera intacta",
+}
+
+catalogue_draw_offsets = {6, 6, 8, 6, 6, 6, 6, 6, 6, 12}
 
 catalogue_dummy_enemy = {
     x, y = 0, 0,
@@ -90,14 +103,26 @@ function draw_fish(func, x, y)
     func(catalogue_dummy_enemy)
 end
 
-function display_catalogue()
-
-for i = 1,10 do
-    catalogue_draw_positions[2*i-1] = 16
-    catalogue_draw_positions[2*i] = -128 + 12 * i
+function create_catalogue()
+    catalogue_fish_pos = {}
+    add_tf(catalogue_fish_pos)
+    catalogue_fish_pos.drag = 0.5
+    selected_fish = 1
 end
+
+function display_catalogue()
+    tf_spring_to(catalogue_fish_pos, -selected_fish*64, nil, 0.03)
+    tf_update(catalogue_fish_pos)
+    local y_offset = 6
+    circfill(64,-60+y_offset,23,4)
+    local unlocked = 0
+    
     for i, draw_func in ipairs(catalogue_draw_functions) do
-        local draw_x, draw_y = catalogue_draw_positions[i*2-1], catalogue_draw_positions[i*2]
+        local draw_x, draw_y = catalogue_fish_pos.x + i*64, -54 + y_offset
+        draw_x = atan2(draw_x/64, 1) * 300 - 154 - catalogue_draw_offsets[i]
+        if i == selected_fish then
+            draw_y -= 8
+        end
         pal(2, 4)
         pal(8, 4)
         pal(14, 4)
@@ -115,10 +140,38 @@ end
         pal(14, 14)
         pal(15, 15)
         if (dget(0) >> (i - 1)) & 1 == 1 then -- fish catalogued
+            unlocked += 1
             draw_fish(draw_func, draw_x, draw_y)
+            if i == selected_fish then
+                textlen = print(catalogue_names[i], 0, 200)
+                print(catalogue_names[i], 64-textlen/2+1, -41+y_offset, 4)
+                print(catalogue_names[i], 64-textlen/2, -42+y_offset, 6)
+                textlen = print(catalogue_surnames[i], 0, 200)
+                print(catalogue_surnames[i], 64-textlen/2+1, -83+y_offset, 4)
+                print(catalogue_surnames[i], 64-textlen/2, -84+y_offset, 7)
+            end
         else
+            if i == selected_fish then
+                print("?????", 55, -41+y_offset, 6)
+                print("?????", 55, -84+y_offset, 7)
+            end
             spr(16, draw_x-3, draw_y-5)
         end
-        print(catalogue_names[i], draw_x + 22, draw_y - 8, 7)
     end
+
+    spr(128, 39, -127, 6, 4) --print game title
+    print("fish catalogue", 36, -99, 1)
+    print("fish catalogue", 37, -100, 1)
+    print("fish catalogue", 38, -99, 1)
+    print("fish catalogue", 38, -98, 4)
+    print("fish catalogue", 37, -99, 7)
+
+    if selected_fish > 1 then
+        spr(150, 2, -79)
+    end
+    if selected_fish < #catalogue_draw_functions then
+        spr(150, 118, -79, 1, 1, true)
+    end
+
+    print(unlocked.."/"..#catalogue_draw_functions.." unlocked", 71, -8)
 end

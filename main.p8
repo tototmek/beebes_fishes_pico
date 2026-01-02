@@ -12,6 +12,8 @@ function _init()
         drag = 0.95,
     }
 
+    create_catalogue()
+
     player = player_create()
     playing = false
 
@@ -89,9 +91,10 @@ function _update60()
     if (btnp(3)) catalogue = false
     if catalogue then -- catalogue button logic
         if (btnp(0)) then --left
-
+            selected_fish = min(#catalogue_draw_functions, max(1, selected_fish - 1))
         end
         if (btnp(1)) then --right
+            selected_fish = min(#catalogue_draw_functions, max(1, selected_fish + 1))
         end
     else -- menu button logic
         if (btnp(0)) then --left
@@ -222,15 +225,17 @@ function _draw()
         -- print checkpoint menu
         tf_spring_to(checkpoint_text_label, 0, nil, 0.02)
         tf_update(checkpoint_text_label)
+        print("catalogue", -checkpoint_text_label.x+10, 2, 7)
+        spr(151, -checkpoint_text_label.x+2, 2)
         if selected_checkpoint == 0 then
             tf_spring_to(checkpoint_label, 130, nil, 0.05)
-            print("checkpoints", checkpoint_text_label.x+76, 71, 7)
-            spr(150.5, checkpoint_text_label.x+118, 70, 1, 1, true)
+            print(" check\npoints", checkpoint_text_label.x+98, 68, 7)
+            spr(150.5, checkpoint_text_label.x+119, 70, 1, 1, true)
         else
             tf_spring_to(checkpoint_label, -selected_checkpoint * 40, nil, 0.05)
-            spr(150.5, 2, 70, 1, 1)
+            spr(150, 2, 70)
             if selected_checkpoint < total_checkpoints then
-                spr(150.5, 118, 70, 1, 1, true)
+                spr(150, 118, 70, 1, 1, true)
             end
         end
         tf_update(checkpoint_label)
