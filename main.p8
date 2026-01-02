@@ -3,6 +3,9 @@ function _init()
     poke(0x5f5d, 0xff) --no button repeat--
     cartdata("beebes_fishes_1")
     music(1)
+
+    selected_checkpoint = 0
+    max_checkpoint = dget(1)
     
     environment = {
         drag = 0.95,
@@ -40,8 +43,7 @@ function init_gameplay()
     pillars, player_bullets, enemy_bullets, enemies, foam_particles, explosion_particles, torpedo_particles = {}, {}, {}, {}, {}, {}, {}
     player = player_create()
     press_x_text.target_y = 160
-    spawners_init()
-    bathysphaera_spawn(63)
+    spawners_init(selected_checkpoint)
 end
 
 
@@ -59,24 +61,8 @@ function _update60()
             coresume(pillar_spawner_coroutine)
         end
         if costatus(spawner_coroutine) then
-            -- coresume(spawner_coroutine)
+            coresume(spawner_coroutine)
         end
-        -- if beat_counter % 23 == 0 then -- every 2.3 seconds
-        --     -- pillar_spawn(32 + rnd(80), 24 + rnd(16))
-        --     pillar_spawn(32+rnd(64), 24)
-        -- elseif beat_counter % 52 == 0 then
-        --     -- bubblefish_spawn(16+rnd(88))
-        -- elseif beat_counter % 87 == 0 then
-        --     --medusa_spawn(16+rnd(88))
-        -- elseif beat_counter % 80 == 0 then
-        --     --sailfin_spawn(16+rnd(88))
-        -- elseif beat_counter % 133 == 0 then
-        --     --constellationfish_spawn(16+rnd(88))
-        -- elseif beat_counter % 316 == 0 then
-        --     --nautilus_spawn(16+rnd(88))
-        -- elseif beat_counter % 116 == 0 then
-        --     --rainbowgar_spawn(63)
-        -- end
     end
 
 
@@ -204,7 +190,7 @@ function _draw()
             print("\^w\^t"..score, 64-0.5*score_str_length, 50)
             pset(63,63)
         else
-            --print game title
+            spr(128, 39, 30, 6, 4) --print game title
         end
     end
     print("press ❎", 48, press_x_text.y+sine_y+1, 1)

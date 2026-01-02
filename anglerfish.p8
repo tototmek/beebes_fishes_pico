@@ -158,6 +158,9 @@ function anglerfish_light_die(bf)
     bf.parent.hp -= 1
     bf.parent.exploding = 100
     explode_small(bf.parent.x, bf.parent.y-8)
+    for i=1,5-bf.parent.hp do
+        bubblefish_spawn(rnd(16+96))
+    end
 end
 
 function anglerfish_light_draw(bf)

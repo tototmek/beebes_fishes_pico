@@ -11,8 +11,9 @@ spawn_functions = {
     bathysphaera_spawn,
 }
 
-function spawners_init()
-    spawner_stage = 1
+function spawners_init(starting_checkpoint)
+    spawner_stage = 1 + starting_checkpoint
+    printh("Starting from stage "..spawner_stage)
     spawner_current_spr = 0
     spawner_pillar_rate = 0
     pillar_spawner_coroutine = cocreate(pillar_spawner_run)
@@ -40,13 +41,16 @@ function spawner_run()
     for i=1,30 do
         yield()
     end
-    spawner_stage = 1
     while spawner_stage < 7 do
         for i=1,4 do
             spawner_perform_random_sprite()
         end
         spawner_perform_final_sprite()
         spawner_stage+=1
+        if spawner_stage > dget(1) then
+            dset(1, spawner_stage)
+            printh("Checkpoint unlocked")
+        end
     end
     while true do
         spawner_perform_random_sprite()
@@ -65,6 +69,7 @@ function spawner_perform_final_sprite()
 end
 
 function spawner_perform_sprite(spr_id)
+    printh("stage "..spawner_stage)
     printh("Spawner performing sprite "..spr_id)
     local spr_x, spr_y = (spr_id % 16) * 8, (spr_id \ 16) * 8
     spawner_pillar_rate = sget(spr_x, spr_y)
