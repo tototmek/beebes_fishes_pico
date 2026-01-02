@@ -1,5 +1,6 @@
 function catalogue_unlock_fish(index)
-    dset(0, dget(0) | (1 << index))
+    new_value = dget(0) | (1 << (index-1))
+    dset(0, dget(0) | (1 << (index-1)))
 end
 
 function bubblefish1_draw_wrapper(bf)
