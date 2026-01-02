@@ -1,6 +1,6 @@
 function bubblefish_spawn(y)
     if rnd(1) > 0.85 then
-        sprite, id = 60, 10
+        sprite, id = 60, 5
     else
         sprite, id = 7, 1
     end

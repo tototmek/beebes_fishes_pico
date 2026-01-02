@@ -1,5 +1,5 @@
 function anglerfish_spawn(y)
-    local enemy = {id = 2,
+    local enemy = {id = 3,
         hp = 3, dead = false,
         target_x = 104, target_y = y,
         atk_func = cocreate(anglerfish_atk),

@@ -12,6 +12,11 @@ function bubblefish2_draw_wrapper(bf)
     bubblefish_draw(bf)
 end
 
+function medusa_draw_wrapper(bf) 
+    bf.spr = 1
+    medusa_draw(bf)
+end
+
 
 function bathysphaera_draw_mock(bf)
     local length = 40
@@ -51,7 +56,7 @@ catalogue_draw_functions = {
     bubblefish1_draw_wrapper,
     constellationfish_draw,
     anglerfish_draw,
-    medusa_draw,
+    medusa_draw_wrapper,
     bubblefish2_draw_wrapper,
     nautilus_draw,
     naked_nautilus_draw,

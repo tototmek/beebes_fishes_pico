@@ -216,11 +216,11 @@ function _draw()
         end
         if game_over then
             press_x_text.target_y = 92
-            print("game over", 47, 31, 2)
-            print("game over", 46, 30, 7)
-            print("𝘴𝘤𝘰𝘳𝘦", 53, 61, 7)
-            score_str_length = print("\^w\^t"..score,0,-100)
-            print("\^w\^t"..score, 64-0.5*score_str_length, 50)
+            print("game over", 47, 19, 2)
+            print("game over", 46, 18, 7)
+            print("𝘴𝘤𝘰𝘳𝘦", 53, 51, 7)
+            score_str_length = print("\^w\^t"..score,0,128)
+            print("\^w\^t"..score, 64-0.5*score_str_length, 40)
             pset(63,63)
         else
             spr(128, 39, 20, 6, 4) --print game title

@@ -1,5 +1,5 @@
 function sailfin_spawn(y)
-    local enemy = {id = 8,
+    local enemy = {id = 9,
         hp = 1, dead = false,
         target_x = 104, target_y = y,
         atk_func = cocreate(sailfin_atk),
