@@ -6,7 +6,7 @@ function _init()
 
     selected_checkpoint = 0
     max_checkpoint = dget(1)
-    total_checkpoints = 6
+    total_checkpoints = 5
     
     environment = {
         drag = 0.95,
