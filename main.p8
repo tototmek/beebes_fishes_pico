@@ -6,6 +6,7 @@ function _init()
 
     selected_checkpoint = 0
     max_checkpoint = dget(1)
+    total_checkpoints = 6
     
     environment = {
         drag = 0.95,
@@ -24,6 +25,14 @@ function _init()
 
     press_x_text = {target_y = 92}
     add_tf(press_x_text, 33, 128)
+
+    checkpoint_label = {}
+    add_tf(checkpoint_label, 0, 72)
+    checkpoint_label.drag=0.5
+
+    checkpoint_text_label = {}
+    add_tf(checkpoint_text_label, 170)
+    checkpoint_text_label.drag=0.1
 
     back_particles = {}
     for i=1,20 do
@@ -69,13 +78,29 @@ function _update60()
     else -- end of main game loop, menu code below
     dead_ctr += 1
     if (btnp(4) or btnp(5)) and not catalogue then -- pressed play
-        if (dead_ctr > 50) then
-            init_gameplay()
-            sfx(1)
+        if selected_checkpoint <= max_checkpoint then
+            if (dead_ctr > 50) then
+                init_gameplay()
+                sfx(1)
+            end
         end
     end
     if (btnp(2)) catalogue = true
     if (btnp(3)) catalogue = false
+    if catalogue then -- catalogue button logic
+        if (btnp(0)) then --left
+
+        end
+        if (btnp(1)) then --right
+        end
+    else -- menu button logic
+        if (btnp(0)) then --left
+            selected_checkpoint = min(total_checkpoints, max(0, selected_checkpoint - 1))
+        end
+        if (btnp(1)) then --right
+            selected_checkpoint = min(total_checkpoints, max(0, selected_checkpoint + 1))
+        end
+    end
     if game_over then
         player.ddy = 0.02
         player.ddx = -0.004
@@ -171,6 +196,7 @@ function _draw()
         print(lives.."  ", 1, 2, 7)
         score_str_length = print(score,0,-100)
         print(score, 127-score_str_length, 2)
+        spawner_progress_bar_print()
 
     -- print("particles "..#foam_particles, 63, level_height+3)
     else -- draw main menu
@@ -190,11 +216,47 @@ function _draw()
             print("\^w\^t"..score, 64-0.5*score_str_length, 50)
             pset(63,63)
         else
-            spr(128, 39, 30, 6, 4) --print game title
+            spr(128, 39, 20, 6, 4) --print game title
+        end
+
+        -- print checkpoint menu
+        tf_spring_to(checkpoint_text_label, 0, nil, 0.02)
+        tf_update(checkpoint_text_label)
+        if selected_checkpoint == 0 then
+            tf_spring_to(checkpoint_label, 130, nil, 0.05)
+            print("checkpoints", checkpoint_text_label.x+76, 71, 7)
+            spr(150.5, checkpoint_text_label.x+118, 70, 1, 1, true)
+        else
+            tf_spring_to(checkpoint_label, -selected_checkpoint * 40, nil, 0.05)
+            spr(150.5, 2, 70, 1, 1)
+            if selected_checkpoint < total_checkpoints then
+                spr(150.5, 118, 70, 1, 1, true)
+            end
+        end
+        tf_update(checkpoint_label)
+        for i=1,total_checkpoints do
+            local draw_x = checkpoint_label.x + i*40 + 64
+            local draw_y = checkpoint_label.y + sin(i/4+t()*0.2)*4
+            if i==selected_checkpoint then
+                spr(136, draw_x-8, draw_y-8, 2, 2)
+            else
+                spr(138, draw_x-8, draw_y-8, 2, 2)
+            end
+            if i>max_checkpoint then
+                spr(134, draw_x-4, draw_y-4)
+            else
+                spr(135, draw_x-4, draw_y-4)
+            end
+            print(i, draw_x-2, draw_y-3, 7)
         end
     end
-    print("press ❎", 48, press_x_text.y+sine_y+1, 1)
-    print("press ❎", 47, press_x_text.y+sine_y, 7)
+
+    local message = " locked..."
+    if selected_checkpoint <= max_checkpoint then
+        message = "press ❎"
+    end
+    print(message, 48, press_x_text.y+sine_y+1, 1)
+    print(message, 47, press_x_text.y+sine_y, 7)
 
     -- print("plr:"..#pillars.." enm:"..#enemies.." pb:"..#player_bullets.." eb:"..#enemy_bullets, 38, level_height + 3)
 

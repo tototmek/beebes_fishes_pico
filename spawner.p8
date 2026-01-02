@@ -42,11 +42,13 @@ function spawner_run()
         yield()
     end
     while spawner_stage < 7 do
-        for i=1,4 do
+        for i=1,5 do
             spawner_perform_random_sprite()
+            spawner_current_spr = i
         end
         spawner_perform_final_sprite()
         spawner_stage+=1
+        spawner_current_spr = 0
         if spawner_stage > dget(1) then
             dset(1, spawner_stage)
             printh("Checkpoint unlocked")
@@ -88,4 +90,21 @@ function spawner_perform_sprite(spr_id)
     for i=1,1+4*step_wait_time do
         yield()
     end
+end
+
+
+function spawner_progress_bar_print()
+    local seglen = 12
+    rect(28, 2, 100, 3, 5)
+    line(29, 3, 99, 3, 4)
+    local playerpos = 28+(spawner_stage-1)*seglen+spawner_current_spr*2.3
+    line(29, 3, playerpos, 3, 5)
+    for i = 1,6 do
+        if i < spawner_stage then --stage cleared
+            spr(166, 24+i*seglen, 0)
+        else --stage yet to clear
+            spr(167, 24+i*seglen, 0)
+        end
+    end
+    spr(168, playerpos - 3, 0)
 end

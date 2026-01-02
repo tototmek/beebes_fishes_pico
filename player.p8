@@ -121,5 +121,6 @@ function player_get_hit()
         music(1)
         game_over = true
         playing = false
+        max_checkpoint = dget(1)
     end
 end
