@@ -1,4 +1,8 @@
 function medusa_spawn(y)
+    if rnd(1) > 0.975 then 
+        octopus_spawn(y)
+        return
+    end
     local enemy = {id = 4,
         hp = 1, dead = false,
         atk_func = cocreate(medusa_atk),
@@ -34,4 +38,26 @@ function medusa_draw(bf)
     local draw_x, draw_y = flr(bf.x), flr(bf.y)
     spr(53+bf.spr, draw_x-6, draw_y-2)
     spr(51+bf.spr, draw_x-4, draw_y-4)
+end
+
+function octopus_spawn(y)
+    local enemy = {id = 11,
+        hp = 1, dead = false,
+        atk_func = cocreate(medusa_atk),
+        die_func = empty_func,
+        update_func = empty_func,
+        draw_func = octopus_draw,
+        atk_rate = 105,
+        beat_ctr = 0,
+        seed = time() + rnd(1),
+        spr = 1
+    }
+    add_tf(enemy, 136, y, 0, 0, -0.010, 0.002)
+    add_collider(enemy, 4, 4)
+    add(enemies, enemy)
+end
+
+function octopus_draw(bf)  
+    local draw_x, draw_y = flr(bf.x), flr(bf.y)
+    spr(62+bf.spr, draw_x-4, draw_y-4)
 end

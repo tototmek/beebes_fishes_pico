@@ -17,6 +17,11 @@ function medusa_draw_wrapper(bf)
     medusa_draw(bf)
 end
 
+function octopus_draw_wrapper(bf) 
+    bf.spr = 0
+    octopus_draw(bf)
+end
+
 
 function bathysphaera_draw_mock(bf)
     local length = 40
@@ -63,6 +68,7 @@ catalogue_draw_functions = {
     rainbowgar_draw,
     sailfin_draw,
     grenadier_draw,
+    octopus_draw_wrapper,
     bathysphaera_draw_mock,
 }
 
@@ -77,6 +83,7 @@ catalogue_names = {
     "abyssal rainbow gar",
     "pallid sailfin",
     "pacific grenadier",
+    "small jellyhead octopus",
     "giant dragonfish",
 }
 
@@ -91,6 +98,7 @@ catalogue_surnames = {
     "abyssobelonidus atlanticus",
     "bathyembryx istiophasma",
     "coryphaenoides acrolepis",
+    "grimpoteuthis innominata",
     "bathysphaera intacta",
 }
 
