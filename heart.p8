@@ -13,13 +13,14 @@ function heart_spawn(x, y)
         beat_ctr = 0,
         seed = time() + rnd(1),
         spr = 1,
-        timer = 50+rnd(100),
+        timer = 50+rnd(20),
     }
     add_tf(enemy, x, y, rnd(2)-1, -1 + rnd(0.5), 0, 0.007)
     explode_small(x+rnd(16)-8, y+rnd(16)-8)
     add_collider(enemy, 4, 4)
     enemy.drag = 0.95
     add(enemies, enemy)
+    sfx(16)
 end
 
 function heart_update(bf)

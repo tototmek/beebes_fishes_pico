@@ -69,6 +69,7 @@ catalogue_draw_functions = {
     sailfin_draw,
     grenadier_draw,
     octopus_draw_wrapper,
+    gulper_draw,
     bathysphaera_draw_mock,
 }
 
@@ -84,6 +85,7 @@ catalogue_names = {
     "pallid sailfin",
     "pacific grenadier",
     "small jellyhead octopus",
+    "gulper eel",
     "giant dragonfish",
 }
 
@@ -99,6 +101,7 @@ catalogue_surnames = {
     "bathyembryx istiophasma",
     "coryphaenoides acrolepis",
     "grimpoteuthis innominata",
+    "saccopharynx ampullaceus",
     "bathysphaera intacta",
 }
 
@@ -109,6 +112,7 @@ catalogue_dummy_enemy = {
     exploding = 0,
     frame_ctr = 0,
     spr = 0,
+    beat_ctr = 0,
 }
 
 function draw_fish(func, x, y)

@@ -37,7 +37,7 @@ function spawner_run()
         yield()
     end
     bubblefish_spawn(63)
-    -- medusa_spawn(63)
+    gulper_spawn(63)
     for i=1,30 do
         yield()
     end
@@ -59,7 +59,18 @@ function spawner_run()
     end
 end
 
+gulper_countdown = 0
+
 function spawner_perform_random_sprite()
+    if player.hp == 1 then -- provide a gulper with heart if player survived long enough on low hp
+        gulper_countdown += 1
+        if gulper_countdown == 3 then
+            gulper_spawn(32+rnd(64))
+            gulper_countdown = 0
+        end
+    else
+        gulper_countdown = 0
+    end
     spawner_perform_sprite(192+(spawner_stage-1)*8+flr(rnd(6)))
 end
 
