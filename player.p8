@@ -113,7 +113,7 @@ function player_get_hit()
     --     music(5)
     --     sfx(8)
     -- end
-    if (player.hp < 1) then
+    if (player.hp < 1 and hearts == 0) then
         for bullet in all(player_bullets) do
             explode_small(bullet.x+6, bullet.y)
         end

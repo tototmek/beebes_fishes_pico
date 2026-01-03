@@ -58,6 +58,5 @@ function octopus_spawn(y)
 end
 
 function octopus_draw(bf)  
-    local draw_x, draw_y = flr(bf.x), flr(bf.y)
-    spr(62+bf.spr, draw_x-4, draw_y-4)
+    spr(62+bf.spr, bf.x-4, bf.y-4)
 end

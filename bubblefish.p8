@@ -53,9 +53,14 @@ function enemy_shoot(x, y, dx, dy, ddy)
     sfx(3)
 end
 
+last_enemy_x = 0
+last_enemy_y = 0
+
 function enemy_update(enemy)
     tf_update(enemy)
     enemy.update_func(enemy)
+    last_enemy_x = enemy.x
+    last_enemy_y = enemy.y
     if enemy.hp < 1 then
         enemy.dead = true
         score += 1

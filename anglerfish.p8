@@ -39,6 +39,8 @@ function anglerfish_atk(bf)
         yield()
         yield()
         yield()
+        bubblefish_spawn(44)
+        bubblefish_spawn(84)
         anglerfish_light_spawn(bf) -- spawn the light
         while (bf.lights_out) do
             yield()
@@ -158,8 +160,10 @@ function anglerfish_light_die(bf)
     bf.parent.hp -= 1
     bf.parent.exploding = 100
     explode_small(bf.parent.x, bf.parent.y-8)
-    for i=1,5-bf.parent.hp do
-        bubblefish_spawn(rnd(16+96))
+    if parent.hp > 0 then
+        for i=1,5-bf.parent.hp do
+            bubblefish_spawn(16+rnd(96))
+        end
     end
 end
 
