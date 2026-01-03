@@ -39,7 +39,6 @@ function spawner_run()
     end
     -- bubblefish_spawn(63)
     -- medusa_spawn(63)
-    grenadier_spawn(63)
     for i=1,30 do
         yield()
     end

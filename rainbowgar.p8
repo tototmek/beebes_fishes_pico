@@ -1,4 +1,8 @@
 function rainbowgar_spawn(y, recursion, s_x, s_y)
+    if (not recursion and rnd(1)>0.95) then
+        grenadier_spawn(y)
+        return
+    end
     local enemy = {id = 8,
         hp = 1, dead = false,
         target_x = 104, target_y = y,
