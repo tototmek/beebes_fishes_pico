@@ -218,12 +218,18 @@ function _draw()
             press_x_text.target_y = 92
             print("game over", 47, 19, 2)
             print("game over", 46, 18, 7)
-            print("𝘴𝘤𝘰𝘳𝘦", 53, 51, 7)
+            print("𝘴𝘤𝘰𝘳𝘦", 53, 51)
             score_str_length = print("\^w\^t"..score,0,128)
             print("\^w\^t"..score, 64-0.5*score_str_length, 40)
-            pset(63,63)
+            if is_highscore then
+                print(" new\nbest!", 64+0.5*score_str_length+8, 40, 8)
+            end
         else
             spr(128, 39, 20, 6, 4) --print game title
+        end
+        if dget(2) > 0 then
+            score_str_length = print("best:"..dget(2),0,-100)
+            print("best:"..dget(2), 127-score_str_length, 2, 7)
         end
 
         -- print checkpoint menu

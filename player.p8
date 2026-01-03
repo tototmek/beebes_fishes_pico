@@ -103,6 +103,8 @@ function player_bullets_update()
     end
 end
 
+is_highscore = false
+
 function player_get_hit()
     if (player.hittable == false) return
     sfx(4)
@@ -122,5 +124,10 @@ function player_get_hit()
         game_over = true
         playing = false
         max_checkpoint = dget(1)
+        if score > dget(2) then --new highscore
+            dset(2, score)
+            is_highscore = true
+            printh("New highscore")
+        end
     end
 end

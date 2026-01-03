@@ -37,7 +37,7 @@ function spawner_run()
         yield()
     end
     bubblefish_spawn(63)
-    gulper_spawn(63)
+    -- gulper_spawn(63)
     for i=1,30 do
         yield()
     end
