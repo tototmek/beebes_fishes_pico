@@ -71,7 +71,7 @@ function spawner_perform_final_sprite()
     while #enemies > 0 do
         yield()
     end
-    heart_spawn(last_enemy_x, last_enemy_y)
+    heart_spawn(max(8, min(120, last_enemy_x)), max(8, min(120, last_enemy_y)))
     for i=1,9 do
         yield()
     end

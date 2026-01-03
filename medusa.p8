@@ -1,5 +1,5 @@
 function medusa_spawn(y)
-    if rnd(1) > 0.975 then 
+    if rnd(1) > 0.95 then 
         octopus_spawn(y)
         return
     end
