@@ -228,7 +228,7 @@ function _draw()
             spr(128, 39, 20, 6, 4) --print game title
         end
         if dget(2) > 0 then
-            score_str_length = print("best:"..dget(2),0,-100)
+            score_str_length = print("best:"..dget(2),0,200)
             print("best:"..dget(2), 127-score_str_length, 2, 7)
         end
 
