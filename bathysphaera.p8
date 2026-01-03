@@ -1,5 +1,5 @@
 function bathysphaera_spawn(y)
-    local enemy = {id = 10,
+    local enemy = {id = 11,
         hp = 30, dead = false,
         target_x = 136, target_y = y,
         atk_func = cocreate(bathysphaera_atk),

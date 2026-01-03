@@ -62,6 +62,7 @@ catalogue_draw_functions = {
     naked_nautilus_draw,
     rainbowgar_draw,
     sailfin_draw,
+    grenadier_draw,
     bathysphaera_draw_mock,
 }
 
@@ -75,6 +76,7 @@ catalogue_names = {
     "naked nautilus",
     "abyssal rainbow gar",
     "pallid sailfin",
+    "pacific grenadier",
     "giant dragonfish",
 }
 
@@ -88,10 +90,9 @@ catalogue_surnames = {
     "nautilus nudus",
     "abyssobelonidus atlanticus",
     "bathyembryx istiophasma",
+    "coryphaenoides acrolepis",
     "bathysphaera intacta",
 }
-
-catalogue_draw_offsets = {6, 6, 8, 6, 6, 6, 6, 6, 6, 12}
 
 catalogue_dummy_enemy = {
     x, y = 0, 0,
@@ -124,7 +125,7 @@ function display_catalogue()
     
     for i, draw_func in ipairs(catalogue_draw_functions) do
         local draw_x, draw_y = catalogue_fish_pos.x + i*64, -54 + y_offset
-        draw_x = atan2(draw_x/64, 1) * 300 - 154 - catalogue_draw_offsets[i]
+        draw_x = atan2(draw_x/64, 1) * 300 - 160
         if i == selected_fish then
             draw_y -= 8
         end

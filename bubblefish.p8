@@ -1,5 +1,5 @@
 function bubblefish_spawn(y)
-    if rnd(1) > 0.85 then
+    if rnd(1) > 0.95 then
         sprite, id = 60, 5
     else
         sprite, id = 7, 1
@@ -44,9 +44,9 @@ function bubblefish_draw(bf)
 end
 
 
-function enemy_shoot(x, y, dx, dy)
+function enemy_shoot(x, y, dx, dy, ddy)
     local bullet = {}
-    add_tf(bullet, x, y, dx or -1.5, dy or 0)
+    add_tf(bullet, x, y, dx or -1.5, dy or 0, 0, ddy or 0)
     add_collider(bullet, 1, 1)
     bullet.drag = 1
     add(enemy_bullets, bullet)
