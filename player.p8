@@ -123,7 +123,6 @@ function player_get_hit()
         if score > dget(2) then --new highscore
             dset(2, score)
             is_highscore = true
-            printh("New highscore")
         end
     end
 end

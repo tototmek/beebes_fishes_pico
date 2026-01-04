@@ -34,7 +34,7 @@ end
 
 
 function rainbowgar_draw(bf)  
-    local draw_x, draw_y = flr(bf.x), flr(bf.y) - 4
+    local draw_x, draw_y = bf.x, bf.y - 4
     if bf.recurse_ctr == 2 then
         spr(39 , draw_x-4, draw_y-7, 1, 1)
         spr(55+time()*6%2 , draw_x-3, draw_y, 1, 1)

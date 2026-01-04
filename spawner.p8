@@ -42,16 +42,15 @@ function spawner_run()
         yield()
     end
     while spawner_stage < 7 do
-        -- for i=1,7 do
-        --     spawner_perform_random_sprite()
-        --     spawner_current_spr = i
-        -- end
+        for i=1,7 do
+            spawner_perform_random_sprite()
+            spawner_current_spr = i
+        end
         spawner_perform_final_sprite()
         spawner_stage+=1
         spawner_current_spr = 0
         if spawner_stage-1 > dget(1) then
             dset(1, spawner_stage-1)
-            printh("Checkpoint unlocked")
         end
     end
     while true do
