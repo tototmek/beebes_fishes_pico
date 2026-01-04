@@ -38,7 +38,7 @@ function nautilus_die(bf)
 end
 
 function nautilus_draw(bf) 
-    spr(12 , flr(bf.x)-8, flr(bf.y)-8, 2, 2)
+    spr(12 , bf.x-8, bf.y-8, 2, 2)
 end
 
 function nautilus_update(bf)
@@ -87,5 +87,5 @@ function naked_nautilus_atk(bf)
 end
 
 function naked_nautilus_draw(bf) 
-    spr(14 , flr(bf.x)-8, flr(bf.y)-4, 2, 1, false, bf.flip)
+    spr(14 , bf.x-8, bf.y-4, 2, 1, false, bf.flip)
 end

@@ -2,7 +2,7 @@ function _init()
     poke(0x5f5c, 0xff) --no button repeat--
     poke(0x5f5d, 0xff) --no button repeat--
     cartdata("beebes_fishes_1")
-    music(1)
+    music(16)
 
     selected_checkpoint = 0
     max_checkpoint = dget(1)
@@ -13,6 +13,7 @@ function _init()
     }
 
     create_catalogue()
+    create_cutscene()
 
     player = player_create()
     playing = false
@@ -23,7 +24,7 @@ function _init()
     cam_shake = 0
     catalogue = false
     catalogue_y = -128
-    cam_y = 0
+    cam_y = -128
 
     press_x_text = {target_y = 92}
     add_tf(press_x_text, 33, 128)
@@ -42,6 +43,8 @@ function _init()
     end
 
     bkgr_init()
+    
+    cutscene_on = true
 end
 
 
@@ -80,7 +83,7 @@ function _update60()
 
     else -- end of main game loop, menu code below
     dead_ctr += 1
-    if (btnp(4) or btnp(5)) and not catalogue then -- pressed play
+    if (btnp(4) or btnp(5)) and not catalogue and not cutscene_on then -- pressed play
         if selected_checkpoint <= max_checkpoint then
             if (dead_ctr > 50) then
                 init_gameplay()
@@ -208,8 +211,12 @@ function _draw()
 
     -- print("particles "..#foam_particles, 63, level_height+3)
     else -- draw main menu
-        if catalogue then
-            display_catalogue()
+        if catalogue or cutscene_on then
+            if cutscene_on then
+                display_cutscene()
+            else
+                display_catalogue()
+            end
             cam_y += 0.15 * (catalogue_y - cam_y)
         else
             cam_y -= 0.1 * cam_y
@@ -227,6 +234,7 @@ function _draw()
             end
         else
             spr(128, 39, 20, 6, 4) --print game title
+            print("by tototmek", 83, 121, 1)
         end
         if dget(2) > 0 then
             score_str_length = print("best:"..dget(2),0,200)

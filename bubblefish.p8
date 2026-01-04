@@ -40,7 +40,7 @@ function bubblefish_update(bf)
 end
 
 function bubblefish_draw(bf)  
-    spr(bf.spr+time()*2%2 , flr(bf.x-4), flr(bf.y-4))
+    spr(bf.spr+time()*2%2 , bf.x-4, bf.y-4)
 end
 
 
