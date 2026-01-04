@@ -113,9 +113,9 @@ function enemy_get_hit(enemy, bullet, i)
     deli(player_bullets, i)
 end
 
-function enemy_oscillate(bf, slowness, dx, dy)
+function enemy_oscillate(bf, speed)
     local slowness = slowness or 8
-    tf_spring_to(bf, bf.target_x + cos(bf.seed+2137*time()/(slowness+1)) * (dx or 6), bf.target_y + sin(bf.seed+time()/slowness) * (dy or 8), 0.001)
+    tf_spring_to(bf, bf.target_x + cos(bf.seed+2137*time()/9) * 6, bf.target_y + sin(bf.seed+time()/8) * 8, speed or 0.001)
 end
 
 function empty_func()

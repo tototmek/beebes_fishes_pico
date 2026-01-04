@@ -8,7 +8,7 @@ function rainbowgar_spawn(y, recursion, s_x, s_y)
         target_x = 104, target_y = y,
         atk_func = cocreate(bubblefish_atk),
         die_func = rainbowgar_die,
-        update_func = rainbowgar_update,
+        update_func = bubblefish_update,
         draw_func = rainbowgar_draw,
         atk_rate = 100,
         beat_ctr = 0,
@@ -32,10 +32,6 @@ function rainbowgar_die(bf)
     rainbowgar_spawn(bf.target_y-24/recursion, recursion+1, bf.x, bf.y)
 end
 
-
-function rainbowgar_update(bf)
-    tf_spring_to(bf, bf.target_x + cos(bf.seed+2137+time()/8)*8, bf.target_y + sin(bf.seed+time()/9)*6, 0.001)
-end
 
 function rainbowgar_draw(bf)  
     local draw_x, draw_y = flr(bf.x), flr(bf.y) - 4

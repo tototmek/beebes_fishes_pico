@@ -37,23 +37,21 @@ function nautilus_die(bf)
     naked_nautilus_spawn(bf.x, bf.y+4)
 end
 
-function nautilus_update(bf)
-    tf_spring_to(bf, bf.target_x + cos(bf.seed+2137+time()/8)*8, bf.target_y + sin(bf.seed+time()/9)*6, 0.0006)
-end
-
 function nautilus_draw(bf) 
     spr(12 , flr(bf.x)-8, flr(bf.y)-8, 2, 2)
 end
 
-
+function nautilus_update(bf)
+    enemy_oscillate(bf, 0.0006)
+end
 
 function naked_nautilus_spawn(x, y)
     local enemy = {id = 7,
         hp = 1, dead = false,
         target_x = x, target_y = y,
         atk_func = cocreate(naked_nautilus_atk),
-        die_func = function()end,
-        update_func = function()end,
+        die_func = empty_func,
+        update_func = empty_func,
         draw_func = naked_nautilus_draw,
         atk_rate = 20,
         beat_ctr = 0,

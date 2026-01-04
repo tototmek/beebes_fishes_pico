@@ -10,20 +10,13 @@ function anglerfish_spawn(y)
         atk_rate = 40,
         beat_ctr = 0,
         seed = time(),
-        -- lights = {},
         dashing = false,
         exploding = 0,
         frame_ctr = 0,
         lights_out = false,
         lights = 3,
     }
-    -- enemy.lights[1] = {id=-1}
-    -- enemy.lights[2] = {id=0}
-    -- enemy.lights[3] = {id=1}
     add_tf(enemy, 166, y)
-    -- add_tf(enemy.lights[1], 166, y)
-    -- add_tf(enemy.lights[2], 166, y)
-    -- add_tf(enemy.lights[3], 166, y)
     add_collider(enemy, 2, 7)
     add(enemies, enemy)
 end
@@ -84,7 +77,7 @@ function anglerfish_update(bf)
             bf.dashing = false
         end
     else
-        tf_spring_to(bf, bf.target_x + cos(bf.seed+time()/9)*6, bf.target_y+sin(bf.seed+time()/8), 0.0014)
+        enemy_oscillate(bf, 0.0014)
     end
 end
 

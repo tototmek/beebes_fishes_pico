@@ -4,7 +4,7 @@ function grenadier_spawn(y)
         target_x = 104, target_y = y,
         atk_func = cocreate(grenadier_atk),
         die_func = empty_func,
-        update_func = grenadier_update,
+        update_func = bubblefish_update,
         draw_func = grenadier_draw,
         atk_rate = 40,
         beat_ctr = 0,
@@ -31,11 +31,6 @@ function grenadier_atk(bf)
     yield()
     yield()
     bf.dead = true 
-end
-
-
-function grenadier_update(bf)
-    tf_spring_to(bf, bf.target_x + cos(bf.seed+2137*time()/9) * 6, bf.target_y + sin(bf.seed+time()/8) * 8, 0.001)
 end
 
 function grenadier_draw(bf)  

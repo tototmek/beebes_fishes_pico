@@ -1,13 +1,13 @@
 function constellationfish_spawn(y)
     local enemy = {id = 2,
         hp = 1, dead = false,
-        target_x = 104,
+        target_x = 118,
         target_y = y,
         atk_func = cocreate(constellationfish_atk),
         die_func = constellationfish_die,
         update_func = constellationfish_update,
         draw_func = constellationfish_draw,
-        atk_rate = 90,
+        atk_rate = 140,
         beat_ctr = 0,
         seed = time(),
     }
@@ -17,11 +17,11 @@ function constellationfish_spawn(y)
 end
 
 function constellationfish_atk(bf)
-    for i=1,4 do
+    for i=1,3 do
+        bf.target_x -= 26
         yield()
-        bf.target_x -= 16
     end
-    bf.target_x = 136
+    bf.target_x = 139
     yield()
     yield()
     bf.dead = true
@@ -37,7 +37,7 @@ function constellationfish_die(bf)
 end
 
 function constellationfish_update(bf)
-    enemy_oscillate(bf, 12)
+    enemy_oscillate(bf, 0.002)
 end
 
 function constellationfish_draw(bf) 

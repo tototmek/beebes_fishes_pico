@@ -73,37 +73,10 @@ catalogue_draw_functions = {
     bathysphaera_draw_mock,
 }
 
-catalogue_names = {
-    "hatchetfish",
-    "five-striped constellation fish",
-    "three-starred anglerfish",
-    "giant jelly",
-    "manefish",
-    "nautilus",
-    "naked nautilus",
-    "abyssal rainbow gar",
-    "pallid sailfin",
-    "pacific grenadier",
-    "small jellyhead octopus",
-    "gulper eel",
-    "giant dragonfish",
-}
+catalogue_names_str = "hatchetfish,five-striped constellation fish,three-starred anglerfish,giant jelly,manefish,nautilus,naked nautilus,abyssal rainbow gar,pallid sailfin,pacific grenadier,small jellyhead octopus,gulper eel,giant dragonfish"
 
-catalogue_surnames = {
-    "argyropelecus aculeatus",
-    "bathysidus pentagrammus",
-    "bathyceratias trilynchnus",
-    "stygiomedusa gigantea",
-    "platyberyx opalescens",
-    "nautilus belauensis",
-    "nautilus nudus",
-    "abyssobelonidus atlanticus",
-    "bathyembryx istiophasma",
-    "coryphaenoides acrolepis",
-    "grimpoteuthis innominata",
-    "saccopharynx ampullaceus",
-    "bathysphaera intacta",
-}
+catalogue_surnames_str = "argyropelecus aculeatus,bathysidus pentagrammus,bathyceratias trilynchnus,stygiomedusa gigantea,platyberyx opalescens,nautilus belauensis,nautilus nudus,abyssobelonidus atlanticus,bathyembryx istiophasma,coryphaenoides acrolepis,grimpoteuthis innominata,saccopharynx ampullaceus,bathysphaera intacta"
+
 
 catalogue_dummy_enemy = {
     x, y = 0, 0,
@@ -126,6 +99,8 @@ function create_catalogue()
     add_tf(catalogue_fish_pos)
     catalogue_fish_pos.drag = 0.5
     selected_fish = 1
+    catalogue_names = split(catalogue_names_str)
+    catalogue_surnames = split(catalogue_surnames_str)
 end
 
 function display_catalogue()
