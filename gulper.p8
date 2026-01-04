@@ -32,13 +32,18 @@ function gulper_die(bf)
 end
 
 function gulper_update(bf)
-    tf_spring_to(bf, bf.target_x + cos(bf.seed+2137*time()/9) * 6, bf.target_y + sin(bf.seed+time()/8) * 8, 0.001)
+    enemy_oscillate(bf)
     bf.target_x -= 0.1
     if rnd(1) > 0.89 then
         particle_spawn_foam(bf.x+2, bf.y, rnd(2)-1, rnd(2)-1)
     end
+    if game_over and bf.holding_heart then
+        bf.holding_heart = false
+        sfx(-1, 3)
+    end
     if bf.x < -16 then
         bf.holding_heart = false
         bf.dead = true
+        sfx(-1, 3)
     end
 end

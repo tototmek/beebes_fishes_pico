@@ -46,6 +46,7 @@ end
 
 
 function init_gameplay()
+    is_highscore = false
     music(6)
     cam_y = 0
     score = 0

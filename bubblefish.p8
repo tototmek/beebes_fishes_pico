@@ -36,11 +36,11 @@ end
 
 
 function bubblefish_update(bf)
-    tf_spring_to(bf, bf.target_x + cos(bf.seed+2137*time()/9) * 6, bf.target_y + sin(bf.seed+time()/8) * 8, 0.001)
+    enemy_oscillate(bf)
 end
 
 function bubblefish_draw(bf)  
-    spr(bf.spr+time()*2%2 , flr(bf.x-4), flr(bf.y-4), 1, 1)
+    spr(bf.spr+time()*2%2 , flr(bf.x-4), flr(bf.y-4))
 end
 
 
@@ -113,6 +113,10 @@ function enemy_get_hit(enemy, bullet, i)
     deli(player_bullets, i)
 end
 
+function enemy_oscillate(bf, slowness, dx, dy)
+    local slowness = slowness or 8
+    tf_spring_to(bf, bf.target_x + cos(bf.seed+2137*time()/(slowness+1)) * (dx or 6), bf.target_y + sin(bf.seed+time()/slowness) * (dy or 8), 0.001)
+end
 
 function empty_func()
 end

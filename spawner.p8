@@ -42,7 +42,7 @@ function spawner_run()
         yield()
     end
     while spawner_stage < 7 do
-        for i=1,7 do
+        for i=1,1 do
             spawner_perform_random_sprite()
             spawner_current_spr = i
         end
