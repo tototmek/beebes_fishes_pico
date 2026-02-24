@@ -111,8 +111,7 @@ function display_catalogue()
     local unlocked = 0
     
     for i, draw_func in ipairs(catalogue_draw_functions) do
-        local draw_x, draw_y = catalogue_fish_pos.x + i*64, -54 + y_offset
-        draw_x = atan2(draw_x/64, 1) * 300 - 160
+        local draw_x, draw_y = atan2(catalogue_fish_pos.x/64 + i, 1) * 300 - 160, -54 + y_offset
         if i == selected_fish then
             draw_y -= 8
         end
@@ -154,8 +153,8 @@ function display_catalogue()
 
     spr(128, 39, -127, 6, 4) --print game title
     print("fish catalogue", 36, -99, 1)
-    print("fish catalogue", 37, -100, 1)
-    print("fish catalogue", 38, -99, 1)
+    print("fish catalogue", 37, -100)
+    print("fish catalogue", 38, -99)
     print("fish catalogue", 38, -98, 4)
     print("fish catalogue", 37, -99, 7)
 

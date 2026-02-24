@@ -236,9 +236,13 @@ function _draw()
             spr(128, 39, 20, 6, 4) --print game title
             print("by tototmek", 83, 121, 1)
         end
-        if dget(2) > 0 then
-            score_str_length = print("best:"..dget(2),0,200)
-            print("best:"..dget(2), 127-score_str_length, 2, 7)
+        local best_score = dget(2)
+        if best_score > 0 then
+            score_str_length = print("best:"..best_score,0,200)
+            print("best:"..best_score, 127-score_str_length, 2, 7)
+        end
+        if best_score < 10 then
+            print("controls\n❎: jump\n🅾️:shoot", 3, 108, 5)
         end
 
         -- print checkpoint menu
@@ -259,8 +263,7 @@ function _draw()
         end
         tf_update(checkpoint_label)
         for i=1,total_checkpoints do
-            local draw_x = checkpoint_label.x + i*40 + 64
-            local draw_y = checkpoint_label.y + sin(i/4+t()*0.2)*4
+            local draw_x, draw_y = checkpoint_label.x + i*40 + 64, checkpoint_label.y + sin(i/4+t()*0.2)*4
             if i==selected_checkpoint then
                 spr(136, draw_x-8, draw_y-8, 2, 2)
             else
